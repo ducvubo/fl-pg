@@ -2,12 +2,11 @@ import { NextResponse } from 'next/server'
 import { Buffer } from 'buffer'
 
 export const POST = async (req: any) => {
-  console.log('object')
   try {
     const header = req.headers
     const folder_type = header.get('folder_type') || ''
     const formData = await req.formData()
-    const file = formData.get('file')
+    const file = formData.get('upload')
 
     console.log(file)
 
@@ -25,8 +24,8 @@ export const POST = async (req: any) => {
       body: formDataToSend
     })
     const result = await response.json()
-    console.log(result)
-    return new Response(JSON.stringify(result), {
+    const url = result.data.image_cloud
+    return new Response(JSON.stringify({ url }), {
       status: result.statusCode
     })
   } catch (error) {

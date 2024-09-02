@@ -1,245 +1,433 @@
 'use client'
-import React, { useEffect, useRef, useState } from 'react'
-import EditorJS from '@editorjs/editorjs'
-import Header from '@editorjs/header'
-import List from '@editorjs/list'
-import ImageTool from '@editorjs/image'
-import InlineCode from '@editorjs/inline-code'
-import Quote from '@editorjs/quote'
-// @ts-ignore
-import RawTool from '@editorjs/raw'
-// @ts-ignore
-import Checklist from '@editorjs/checklist'
-// @ts-ignore
-import Embed from '@editorjs/embed'
-// @ts-ignore
-import LinkTool from '@editorjs/link'
-// @ts-ignore
-import Marker from '@editorjs/marker'
-// @ts-ignore
-import Code from '@editorjs/code'
-import edjsParser from 'editorjs-html'
-// @ts-ignore
-import AlignmentTuneTool from 'editorjs-text-alignment-blocktune'
-import Table from '@editorjs/table'
-// @ts-ignore
-import Warning from '@editorjs/warning'
-import Delimiter from '@editorjs/delimiter'
-// @ts-ignore
-// import Paragraph from '@editorjs/paragraph'
-import Paragraph from 'editorjs-paragraph-with-alignment'
-export default function BlogEditor() {
-  const editorRef = useRef<EditorJS | null>(null)
-  const [savedContent, setSavedContent] = useState<string>('')
+import { useState, useEffect, useRef } from 'react'
+import { CKEditor } from '@ckeditor/ckeditor5-react'
+
+import {
+  ClassicEditor,
+  AccessibilityHelp,
+  Alignment,
+  Autoformat,
+  AutoImage,
+  AutoLink,
+  Autosave,
+  BalloonToolbar,
+  BlockQuote,
+  BlockToolbar,
+  Bold,
+  Code,
+  CodeBlock,
+  Essentials,
+  FindAndReplace,
+  FontBackgroundColor,
+  FontColor,
+  FontFamily,
+  FontSize,
+  GeneralHtmlSupport,
+  Heading,
+  Highlight,
+  HorizontalLine,
+  ImageBlock,
+  ImageCaption,
+  ImageInline,
+  ImageInsert,
+  ImageInsertViaUrl,
+  ImageResize,
+  ImageStyle,
+  ImageTextAlternative,
+  ImageToolbar,
+  ImageUpload,
+  Indent,
+  IndentBlock,
+  Italic,
+  Link,
+  LinkImage,
+  List,
+  ListProperties,
+  Markdown,
+  MediaEmbed,
+  Mention,
+  Paragraph,
+  PasteFromMarkdownExperimental,
+  PasteFromOffice,
+  RemoveFormat,
+  SelectAll,
+  SimpleUploadAdapter,
+  SpecialCharacters,
+  SpecialCharactersArrows,
+  SpecialCharactersCurrency,
+  SpecialCharactersEssentials,
+  SpecialCharactersLatin,
+  SpecialCharactersMathematical,
+  SpecialCharactersText,
+  Strikethrough,
+  Style,
+  Subscript,
+  Superscript,
+  Table,
+  TableCaption,
+  TableCellProperties,
+  TableColumnResize,
+  TableProperties,
+  TableToolbar,
+  TextPartLanguage,
+  TextTransformation,
+  TodoList,
+  Underline,
+  Undo
+} from 'ckeditor5'
+
+import 'ckeditor5/ckeditor5.css'
+
+import '../globals.css'
+import { Button } from 'antd'
+
+export default function Test() {
+  const editorContainerRef = useRef(null)
+  const editorRef = useRef(null)
+  const [isLayoutReady, setIsLayoutReady] = useState(false)
+  const [getDataEditor, setgetDataEditor] = useState('')
+
   useEffect(() => {
-    const editor = new EditorJS({
-      holder: 'editorjs',
-      placeholder: 'Start writing your blog...',
-      tools: {
-        alignment: {
-          class: AlignmentTuneTool,
-          config: {
-            default: 'left',
-            blocks: {
-              header: 'center',
-              list: 'left',
-              paragraph: 'justify'
-            }
-          }
-        },
-        header: {
-          // @ts-ignore
-          class: Header,
-          config: {
-            placeholder: 'Enter a header',
-            levels: [1, 2, 3, 4, 5, 6], // Các cấp độ tiêu đề từ h1 đến h6
-            defaultLevel: 2
-          },
-          tunes: ['alignment']
-        },
-        list: {
-          // @ts-ignore
-          class: List,
-          inlineToolbar: true,
-          config: {
-            defaultStyle: 'unordered'
-          },
-          tunes: ['alignment']
-        },
-        embed: {
-          class: Embed,
-          config: {
-            services: {
-              youtube: true,
-              vimeo: true,
-              instagram: true,
-              twitter: true,
-              codepen: true
-            }
-          },
-          tunes: ['alignment']
-        },
-        image: {
-          // @ts-ignore
-          class: ImageTool,
-          config: {
-            endpoints: {
-              byFile: 'http://localhost:8008/uploadFile',
-              byUrl: 'http://localhost:8008/fetchUrl'
-            },
-            field: 'image',
-            types: 'image/*'
-          },
-          tunes: ['alignment']
-        },
-        inlineCode: InlineCode,
-        linkTool: {
-          class: LinkTool,
-          config: {
-            endpoint: 'http://localhost:5000/fetchUrl'
-          },
-          tunes: ['alignment']
-        },
-        marker: {
-          class: Marker,
-          shortcut: 'CMD+SHIFT+M',
-          tunes: ['alignment']
-        },
-        quote: {
-          // @ts-ignore
-          class: Quote,
-          inlineToolbar: true,
-          shortcut: 'CMD+SHIFT+O',
-          config: {
-            quotePlaceholder: 'Enter a quote',
-            captionPlaceholder: "Quote's author"
-          },
-          tunes: ['alignment']
-        },
-        checklist: {
-          class: Checklist,
-          inlineToolbar: true,
-          tunes: ['alignment']
-        },
-        raw: RawTool,
-        code: {
-          class: Code,
-          config: {
-            placeholder: 'Enter your code here...'
-          },
-          tunes: ['alignment']
-        },
-        table: {
-          // @ts-ignore
-          class: Table,
-          inlineToolbar: true,
-          config: {
-            rows: 2,
-            cols: 3
-          }
-        },
-        warning: {
-          class: Warning,
-          inlineToolbar: true,
-          config: {
-            titlePlaceholder: 'Title',
-            messagePlaceholder: 'Message'
-          }
-        },
-        delimiter: Delimiter,
-        paragraph: {
-          class: Paragraph,
-          inlineToolbar: true
-        }
-      },
-      autofocus: true,
-      onReady: () => {
-        console.log('Editor.js is ready to work!')
-      },
-      onChange: async () => {
-        console.log('Content changed')
-      }
-    })
+    setIsLayoutReady(true)
 
-    editorRef.current = editor
-
-    return () => {
-      if (editorRef.current) {
-        editorRef.current.destroy()
-        editorRef.current = null
-      }
-    }
+    return () => setIsLayoutReady(false)
   }, [])
 
-  const handleSave = async () => {
-    if (editorRef.current) {
-      try {
-        const savedData = await editorRef.current.save()
-        console.log('Saved data:', savedData)
-
-        const parser = edjsParser()
-        const html = parser.parse(savedData) // Chuyển đổi JSON sang HTML
-        const renderedHTML = html.join('') // Ghép mảng HTML thành chuỗi
-
-        // Set nội dung đã chuyển đổi vào state
-        setSavedContent(renderedHTML)
-        // // Gửi dữ liệu lên backend
-        // const response = await fetch('http://localhost:5000/savePost', {
-        //   method: 'POST',
-        //   headers: {
-        //     'Content-Type': 'application/json'
-        //   },
-        //   body: JSON.stringify(savedData)
-        // })
-
-        // if (response.ok) {
-        //   console.log('Post saved successfully')
-        // } else {
-        //   console.error('Failed to save post')
-        // }
-      } catch (error) {
-        console.error('Error saving data:', error)
+  const editorConfig: any = {
+    toolbar: {
+      items: [
+        'undo',
+        'redo',
+        '|',
+        'heading',
+        'style',
+        '|',
+        'fontSize',
+        'fontFamily',
+        'fontColor',
+        'fontBackgroundColor',
+        '|',
+        'bold',
+        'italic',
+        'underline',
+        '|',
+        'link',
+        'insertImage',
+        'insertTable',
+        'highlight',
+        'blockQuote',
+        'codeBlock',
+        '|',
+        'alignment',
+        '|',
+        'bulletedList',
+        'numberedList',
+        'todoList',
+        'outdent',
+        'indent'
+      ],
+      shouldNotGroupWhenFull: false
+    },
+    plugins: [
+      AccessibilityHelp,
+      Alignment,
+      Autoformat,
+      AutoImage,
+      AutoLink,
+      Autosave,
+      BalloonToolbar,
+      BlockQuote,
+      BlockToolbar,
+      Bold,
+      Code,
+      CodeBlock,
+      Essentials,
+      FindAndReplace,
+      FontBackgroundColor,
+      FontColor,
+      FontFamily,
+      FontSize,
+      GeneralHtmlSupport,
+      Heading,
+      Highlight,
+      HorizontalLine,
+      ImageBlock,
+      ImageCaption,
+      ImageInline,
+      ImageInsert,
+      ImageInsertViaUrl,
+      ImageResize,
+      ImageStyle,
+      ImageTextAlternative,
+      ImageToolbar,
+      ImageUpload,
+      Indent,
+      IndentBlock,
+      Italic,
+      Link,
+      LinkImage,
+      List,
+      ListProperties,
+      Markdown,
+      MediaEmbed,
+      Mention,
+      Paragraph,
+      PasteFromMarkdownExperimental,
+      PasteFromOffice,
+      RemoveFormat,
+      SelectAll,
+      SpecialCharacters,
+      SpecialCharactersArrows,
+      SpecialCharactersCurrency,
+      SpecialCharactersEssentials,
+      SpecialCharactersLatin,
+      SpecialCharactersMathematical,
+      SpecialCharactersText,
+      Strikethrough,
+      Style,
+      Subscript,
+      Superscript,
+      Table,
+      TableCaption,
+      TableCellProperties,
+      TableColumnResize,
+      TableProperties,
+      TableToolbar,
+      TextPartLanguage,
+      TextTransformation,
+      TodoList,
+      Underline,
+      Undo,
+      SimpleUploadAdapter
+    ],
+    balloonToolbar: ['bold', 'italic', '|', 'link', 'insertImage', '|', 'bulletedList', 'numberedList'],
+    blockToolbar: [
+      'fontSize',
+      'fontColor',
+      'fontBackgroundColor',
+      '|',
+      'bold',
+      'italic',
+      '|',
+      'link',
+      'insertImage',
+      'insertTable',
+      '|',
+      'bulletedList',
+      'numberedList',
+      'outdent',
+      'indent'
+    ],
+    fontFamily: {
+      supportAllValues: true
+    },
+    fontSize: {
+      options: [10, 12, 14, 'default', 18, 20, 22],
+      supportAllValues: true
+    },
+    heading: {
+      options: [
+        {
+          model: 'paragraph',
+          title: 'Paragraph',
+          class: 'ck-heading_paragraph'
+        },
+        {
+          model: 'heading1',
+          view: 'h1',
+          title: 'Heading 1',
+          class: 'ck-heading_heading1'
+        },
+        {
+          model: 'heading2',
+          view: 'h2',
+          title: 'Heading 2',
+          class: 'ck-heading_heading2'
+        },
+        {
+          model: 'heading3',
+          view: 'h3',
+          title: 'Heading 3',
+          class: 'ck-heading_heading3'
+        },
+        {
+          model: 'heading4',
+          view: 'h4',
+          title: 'Heading 4',
+          class: 'ck-heading_heading4'
+        },
+        {
+          model: 'heading5',
+          view: 'h5',
+          title: 'Heading 5',
+          class: 'ck-heading_heading5'
+        },
+        {
+          model: 'heading6',
+          view: 'h6',
+          title: 'Heading 6',
+          class: 'ck-heading_heading6'
+        }
+      ]
+    },
+    htmlSupport: {
+      allow: [
+        {
+          name: /^.*$/,
+          styles: true,
+          attributes: true,
+          classes: true
+        }
+      ]
+    },
+    image: {
+      toolbar: [
+        'toggleImageCaption',
+        'imageTextAlternative',
+        '|',
+        'imageStyle:inline',
+        'imageStyle:wrapText',
+        'imageStyle:breakText',
+        '|',
+        'resizeImage'
+      ]
+    },
+    initialData:
+      '<h2>Congratulations on setting up CKEditor 5! 🎉</h2>\n<p>\n    You\'ve successfully created a CKEditor 5 project. This powerful text editor will enhance your application, enabling rich text editing\n    capabilities that are customizable and easy to use.\n</p>\n<h3>What\'s next?</h3>\n<ol>\n    <li>\n        <strong>Integrate into your app</strong>: time to bring the editing into your application. Take the code you created and add to your\n        application.\n    </li>\n    <li>\n        <strong>Explore features:</strong> Experiment with different plugins and toolbar options to discover what works best for your needs.\n    </li>\n    <li>\n        <strong>Customize your editor:</strong> Tailor the editor\'s configuration to match your application\'s style and requirements. Or even\n        write your plugin!\n    </li>\n</ol>\n<p>\n    Keep experimenting, and don\'t hesitate to push the boundaries of what you can achieve with CKEditor 5. Your feedback is invaluable to us\n    as we strive to improve and evolve. Happy editing!\n</p>\n<h3>Helpful resources</h3>\n<ul>\n    <li>📝 <a href="https://orders.ckeditor.com/trial/premium-features">Trial sign up</a>,</li>\n    <li>📕 <a href="https://ckeditor.com/docs/ckeditor5/latest/installation/index.html">Documentation</a>,</li>\n    <li>⭐️ <a href="https://github.com/ckeditor/ckeditor5">GitHub</a> (star us if you can!),</li>\n    <li>🏠 <a href="https://ckeditor.com">CKEditor Homepage</a>,</li>\n    <li>🧑‍💻 <a href="https://ckeditor.com/ckeditor-5/demo/">CKEditor 5 Demos</a>,</li>\n</ul>\n<h3>Need help?</h3>\n<p>\n    See this text, but the editor is not starting up? Check the browser\'s console for clues and guidance. It may be related to an incorrect\n    license key if you use premium features or another feature-related requirement. If you cannot make it work, file a GitHub issue, and we\n    will help as soon as possible!\n</p>\n',
+    link: {
+      addTargetToExternalLinks: true,
+      defaultProtocol: 'https://',
+      decorators: {
+        toggleDownloadable: {
+          mode: 'manual',
+          label: 'Downloadable',
+          attributes: {
+            download: 'file'
+          }
+        }
       }
-    }
+    },
+    list: {
+      properties: {
+        styles: true,
+        startIndex: true,
+        reversed: true
+      }
+    },
+    mention: {
+      feeds: [
+        {
+          marker: '@',
+          feed: [
+            /* See: https://ckeditor.com/docs/ckeditor5/latest/features/mentions.html */
+          ]
+        }
+      ]
+    },
+    menuBar: {
+      isVisible: true
+    },
+    placeholder: 'Type or paste your content here!',
+    style: {
+      definitions: [
+        {
+          name: 'Article category',
+          element: 'h3',
+          classes: ['category']
+        },
+        {
+          name: 'Title',
+          element: 'h2',
+          classes: ['document-title']
+        },
+        {
+          name: 'Subtitle',
+          element: 'h3',
+          classes: ['document-subtitle']
+        },
+        {
+          name: 'Info box',
+          element: 'p',
+          classes: ['info-box']
+        },
+        {
+          name: 'Side quote',
+          element: 'blockquote',
+          classes: ['side-quote']
+        },
+        {
+          name: 'Marker',
+          element: 'span',
+          classes: ['marker']
+        },
+        {
+          name: 'Spoiler',
+          element: 'span',
+          classes: ['spoiler']
+        },
+        {
+          name: 'Code (dark)',
+          element: 'pre',
+          classes: ['fancy-code', 'fancy-code-dark']
+        },
+        {
+          name: 'Code (bright)',
+          element: 'pre',
+          classes: ['fancy-code', 'fancy-code-bright']
+        }
+      ]
+    },
+    table: {
+      contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties']
+    },
+    simpleUpload: {
+      // Thay thế URL này bằng API endpoint của bạn để upload ảnh
+      uploadUrl: 'http://localhost:3000/api/upload/blog',
+      headers: {
+        folder_type: 'blog' // Nếu bạn cần gửi headers cho việc xác thực
+      },
+      withCredentials: true
+      // allowedExtensions: ['.jpg', '.jpeg', '.png'],
+      // maxFileSize: 5000000, // 5MB
+    },
+    removePlugins: ['Markdown']
   }
+
+  const handleSave = () => {}
+
+  console.log(getDataEditor)
 
   return (
     <div>
-      <h2>Create Your Blog Post</h2>
-      <div id='editorjs' style={{ padding: '10px', border: '1px solid #ddd', minHeight: '300px' }}></div>
-      <style jsx>{`
-        .ce-header.ce-header--level-1 {
-          font-size: 5em; /* Cấp độ h1 */
-          font-weight: bold;
-        }
-        .ce-header.ce-header--level-2 {
-          font-size: 1.5em; /* Cấp độ h2 */
-          font-weight: bold;
-        }
-        .ce-header.ce-header--level-3 {
-          font-size: 1.17em; /* Cấp độ h3 */
-          font-weight: bold;
-        }
-        .ce-header.ce-header--level-4 {
-          font-size: 1em; /* Cấp độ h4 */
-          font-weight: bold;
-        }
-        .ce-header.ce-header--level-5 {
-          font-size: 0.83em; /* Cấp độ h5 */
-          font-weight: bold;
-        }
-        .ce-header.ce-header--level-6 {
-          font-size: 0.67em; /* Cấp độ h6 */
-          font-weight: bold;
-        }
-      `}</style>
-
-      <button onClick={handleSave} style={{ marginTop: '10px', padding: '8px 16px', cursor: 'pointer' }}>
-        Save Post
-      </button>
-      <div>
-        <div dangerouslySetInnerHTML={{ __html: savedContent }} />
+      <div className='main-container'>
+        <div
+          className='editor-container editor-container_classic-editor editor-container_include-style editor-container_include-block-toolbar'
+          ref={editorContainerRef}
+        >
+          <div className='editor-container__editor'>
+            <div ref={editorRef}>
+              {isLayoutReady && (
+                <CKEditor
+                  editor={ClassicEditor}
+                  config={editorConfig}
+                  onChange={(event, editor) => {
+                    const data = editor.getData()
+                    setgetDataEditor(data)
+                  }}
+                />
+              )}
+            </div>
+          </div>
+        </div>
       </div>
+      <Button onClick={handleSave}>Save</Button>
+      <div className='editor-preview' dangerouslySetInnerHTML={{ __html: getDataEditor }} />
+      {/* <img
+        src='https://res.cloudinary.com/dkjasvlw6/image/upload/v1725283031/banner/pgppj9jzrz1ha7ozbrag.png'
+        alt='Banner'
+        width='500' // Chỉ định chiều rộng
+        height='300' // Chỉ định chiều cao
+      />{' '} */}
     </div>
   )
 }

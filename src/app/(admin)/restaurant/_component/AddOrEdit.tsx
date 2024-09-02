@@ -406,7 +406,7 @@ export default function AddOrEdit() {
     console.log(res)
 
     console.log('Success:', values)
-  }n
+  }
 
   const onFinishFailed: FormProps<IRestaurant>['onFinishFailed'] = (errorInfo) => {
     const restaurant_address: any = CustomAddress(dataAdress, errorInfo.values)
