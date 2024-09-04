@@ -1,7 +1,12 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { AntdRegistry } from '@ant-design/nextjs-registry';
+import { AntdRegistry } from '@ant-design/nextjs-registry'
+import dynamic from 'next/dynamic'
+import { LoadingProvider } from './context/LoadingContext'
+
+const GlobalLoading = dynamic(() => import('@/components/GlobalLoading'), { ssr: false })
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -17,7 +22,10 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={inter.className}>
-        <AntdRegistry>{children}</AntdRegistry>
+        <LoadingProvider>
+          <GlobalLoading />
+          <AntdRegistry>{children}</AntdRegistry>
+        </LoadingProvider>
       </body>
     </html>
   )

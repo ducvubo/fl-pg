@@ -27,7 +27,6 @@ export const getTag = async (name: string, type: string) => {
       tag_name: name
     }
   })
-  console.log(res)
   return res
 }
 
@@ -65,5 +64,109 @@ export const createRestaurant = async (payload: IRestaurant) => {
     body: payload
   })
 
+  return res
+}
+
+export const getAllRestaurant = async ({ current, pageSize }: { current: string; pageSize: string }) => {
+  const res: IBackendRes<IModelPaginate<IRestaurant[]>> = await sendRequest({
+    url: `${process.env.URL_SERVER}/restaurants`,
+    method: 'GET',
+    queryParams: {
+      current,
+      pageSize
+    },
+    nextOption: {
+      cache: 'no-store'
+    }
+  })
+  return res
+}
+
+export const getRestaurantById = async ({ id }: { id: string }) => {
+  const res: IBackendRes<IRestaurant> = await sendRequest({
+    url: `${process.env.URL_SERVER}/restaurants/${id}`,
+    method: 'GET',
+    nextOption: { cache: 'no-store' }
+  })
+  return res
+}
+
+export const updateRestaurant = async (payload: IRestaurant) => {
+  const res: IBackendRes<IRestaurant> = await sendRequest({
+    url: `${process.env.URL_SERVER}/restaurants`,
+    method: 'PATCH',
+    body: payload
+  })
+  return res
+}
+
+export const deleteRestaurant = async ({ id }: { id: string }) => {
+  const res: IBackendRes<IRestaurant> = await sendRequest({
+    url: `${process.env.URL_SERVER}/restaurants/${id}`,
+    method: 'DELETE'
+  })
+  return res
+}
+
+export const updateModify = async ({
+  _id,
+  status,
+  type
+}: {
+  _id: string
+  status: 'active' | 'inactive' | 'banned' | boolean
+  type: 'status' | 'state' | 'verify'
+}) => {
+  let res: IBackendRes<IRestaurant>
+
+  switch (type) {
+    case 'status':
+      res = await sendRequest({
+        url: `${process.env.URL_SERVER}/restaurants/status`,
+        method: 'PATCH',
+        body: { _id, status }
+      })
+      break
+    case 'state':
+      res = await sendRequest({
+        url: `${process.env.URL_SERVER}/restaurants/state`,
+        method: 'PATCH',
+        body: { _id, status }
+      })
+      break
+    case 'verify':
+      res = await sendRequest({
+        url: `${process.env.URL_SERVER}/restaurants/verify`,
+        method: 'PATCH',
+        body: { _id, status }
+      })
+      break
+    default:
+      throw new Error('Invalid type')
+  }
+
+  return res
+}
+
+export const getAllRestaurantRecycle = async ({ current, pageSize }: { current: string; pageSize: string }) => {
+  const res: IBackendRes<IModelPaginate<IRestaurant[]>> = await sendRequest({
+    url: `${process.env.URL_SERVER}/restaurants/recycle`,
+    method: 'GET',
+    queryParams: {
+      current,
+      pageSize
+    },
+    nextOption: {
+      cache: 'no-store'
+    }
+  })
+  return res
+}
+
+export const restoreRestaurant = async ({ id }: { id: string }) => {
+  const res: IBackendRes<IRestaurant> = await sendRequest({
+    url: `${process.env.URL_SERVER}/restaurants/restore/${id}`,
+    method: 'PATCH'
+  })
   return res
 }

@@ -1,3 +1,5 @@
+import { ICategory } from '../category/category.interface'
+
 export interface IUpLoadImage {
   image_cloud: string
   image_local: string
@@ -35,25 +37,8 @@ export interface IRestaurantPrice {
 
 export interface IRestaurantHours {
   day_of_week: string
-  open: {
-    label: string
-    value: string
-  }
-  close: {
-    label: string
-    value: string
-  }
-}
-
-export interface IMarkDown {
-  text: string
-  html: string
-}
-
-export interface IRestaurantPropose {
-  propose_consultation_reservation: IMarkDown
-  propose_bundled_offer: IMarkDown
-  propose_note: IMarkDown
+  open: number
+  close: number
 }
 
 export interface RestaurantOverview {
@@ -74,21 +59,25 @@ export interface RestaurantOverview {
 }
 
 export interface IRestaurant {
+  _id: string
   restaurant_email: string
   restaurant_password: string
   restaurant_phone: string
-  restaurant_category: string
+  restaurant_category: string | ICategory
   restaurant_name: string
   restaurant_banner: IUpLoadImage
   restaurant_address: IRestaurantAddress
   restaurant_type: string[]
   restaurant_price: IRestaurantPrice
   restaurant_hours: IRestaurantHours[]
-  restaurant_propose: IRestaurantPropose
-  restaurant_overview: RestaurantOverview
-  restaurant_regulation: IMarkDown
-  restaurant_parking_area: IMarkDown
+  restaurant_propose: string
+  restaurant_overview: string
+  restaurant_regulation: string
+  restaurant_parking_area: string
   restaurant_amenity: string[]
   restaurant_image: IUpLoadImage[]
-  restaurant_description: IMarkDown
+  restaurant_description: string
+  restaurant_verify: boolean
+  restaurant_status: 'active' | 'inactive' | 'banned'
+  restaurant_state: boolean
 }

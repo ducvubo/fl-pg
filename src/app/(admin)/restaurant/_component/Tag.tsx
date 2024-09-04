@@ -38,7 +38,6 @@ export default function Tag({
   const addToArr = async () => {
     if (inputValue.trim() !== '') {
       const res = await addTag({ tag_name: inputValue }, type)
-      console.log(res)
       if (res.statusCode === 201) {
         let name = ''
         switch (type) {
