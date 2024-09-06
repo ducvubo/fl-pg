@@ -1,6 +1,13 @@
 import Image from 'next/image'
 import HomePage from './Home'
+import { auth } from '@/auth'
 
-export default function Home() {
-  return <HomePage />
+export default async function Home() {
+  const session = await auth()
+  return (
+    <>
+      {/* {session} */}
+      <HomePage />
+    </>
+  )
 }

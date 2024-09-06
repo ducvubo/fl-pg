@@ -17,6 +17,7 @@ declare global {
     message: string
     statusCode: number | string
     data?: T
+    code?: number
   }
 
   interface IModelPaginate<T> {

@@ -71,28 +71,6 @@ export default function AddOrEdit({ id, inforRestaurant }: Props) {
     }
     getListCategory()
     form.setFieldValue(['restaurant_price', 'restaurant_price_option'], restaurantPrice)
-    // form.setFieldValue({
-    //   restaurant_price: {
-    //     restaurant_price_option: restaurantPrice
-    //   }
-    // })
-
-    //  // Đặt giá trị vào form sau khi các thành phần đã được render
-    //  const setInitialImage = async () => {
-    //   const initialFile: UploadFile = {
-    //     uid: '-1',
-    //     name: 'banner.png',
-    //     status: 'done',
-    //     url: test,
-    //     thumbUrl: test,
-    //   }
-    //   form.setFieldsValue({
-    //     restaurant_banner: [initialFile]
-    //   })
-    //   setImageBanner([initialFile])
-    // }
-
-    // setInitialImage()
   }, [])
 
   const handleDayChange = (value: any, fieldName: any) => {
