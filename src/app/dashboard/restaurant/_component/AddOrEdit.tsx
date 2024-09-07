@@ -260,7 +260,6 @@ export default function AddOrEdit({ id, inforRestaurant }: Props) {
       Toast('Lỗi không xác định', 'Vui lòng thử lại sau', 'error')
     }
 
-    console.log('Success:', values)
   }
 
   const onFinishFailed: FormProps<IRestaurant>['onFinishFailed'] = (errorInfo) => {

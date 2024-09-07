@@ -5,6 +5,7 @@ import { AntdRegistry } from '@ant-design/nextjs-registry'
 import dynamic from 'next/dynamic'
 import { LoadingProvider } from './context/LoadingContext'
 import RefreshToken from './(auth)/_component/RefreshToken'
+import { StoreProvider } from './redux/StoreProvider'
 
 const GlobalLoading = dynamic(() => import('@/components/GlobalLoading'), { ssr: false })
 
@@ -23,11 +24,15 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={inter.className}>
-        <LoadingProvider>
-          <GlobalLoading />
-          <RefreshToken />
-          <AntdRegistry>{children}</AntdRegistry>
-        </LoadingProvider>
+        <StoreProvider>
+          <AntdRegistry>
+            <LoadingProvider>
+              <GlobalLoading />
+              <RefreshToken />
+              {children}
+            </LoadingProvider>
+          </AntdRegistry>
+        </StoreProvider>
       </body>
     </html>
   )

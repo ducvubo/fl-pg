@@ -21,9 +21,9 @@ function getItem(label: React.ReactNode, key: React.Key, icon?: React.ReactNode,
 
 const items: MenuItem[] = [
   getItem('Quản lý nhà hàng', '1', <PieChartOutlined />, [
-    getItem(<Link href={'/restaurant/add'}>Thêm nhà hàng</Link>, '2'),
-    getItem(<Link href={'/restaurant?page=1&size=10'}>Danh sách nhà hàng</Link>, '3'),
-    getItem(<Link href={'/restaurant/recycle?page=1&size=10'}>Nhà hàng đã xóa</Link>, '4')
+    getItem(<Link href={'/dashboard/restaurant/add'}>Thêm nhà hàng</Link>, '2'),
+    getItem(<Link href={'/dashboard/restaurant?page=1&size=10'}>Danh sách nhà hàng</Link>, '3'),
+    getItem(<Link href={'/dashboard/restaurant/recycle?page=1&size=10'}>Nhà hàng đã xóa</Link>, '4')
   ])
 ]
 

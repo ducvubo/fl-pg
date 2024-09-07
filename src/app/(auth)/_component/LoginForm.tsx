@@ -2,36 +2,18 @@
 import React, { useEffect } from 'react'
 import type { FormProps } from 'antd'
 import { Button, Checkbox, Form, Input } from 'antd'
-import { signIn } from '@/auth'
-import { authenticate } from '../auth.api'
+import { login } from '../auth.api'
 import { Toast } from '@/app/components/Notification'
+import { useDispatch } from 'react-redux'
+import { IUser } from '../auth.interface'
+import { startAppUser } from '../auth.slice'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { useLoading } from '@/app/context/LoadingContext'
 
 interface LoginForm {
   us_email: string
   us_password: string
-}
-
-const onFinish: FormProps<LoginForm>['onFinish'] = async (values) => {
-  const { us_email, us_password } = values
-  const res: string | { error: string; code: number } = await authenticate({ us_email, us_password })
-  console.log(res)
-  if (typeof res === 'string') {
-    Toast('Thành công', 'Đăng nhập thành công', 'success')
-  } else if (res.code === -1) {
-    Toast('Lỗi', res.error, 'error')
-  } else if (res.code === -2) {
-    Toast('Lỗi', res.error, 'error')
-  } else if (res.code === -3) {
-    Toast('Lỗi', res.error, 'error')
-  } else if (res.code === -4) {
-    Toast('Lỗi', res.error, 'error')
-  } else if (res.code === -5) {
-    Toast('Lỗi', res.error, 'error')
-  } else {
-    Toast('Lỗi', 'Đã có lỗi xảy ra, vui lòng thử lại sau', 'error')
-  }
-  // console.log(res)
-  // console.log('Success:', values)
 }
 
 const onFinishFailed: FormProps<LoginForm>['onFinishFailed'] = (errorInfo) => {
@@ -39,19 +21,42 @@ const onFinishFailed: FormProps<LoginForm>['onFinishFailed'] = (errorInfo) => {
 }
 
 export default function LoginForm() {
-  const [form] = Form.useForm()
+  const { setLoading } = useLoading()
+  const dispatch = useDispatch()
+  const router = useRouter()
+  const runAppUser = (inforUser: IUser) => {
+    dispatch(startAppUser(inforUser))
+  }
 
-  useEffect(() => {
-    // Sử dụng setFieldsValue để đặt giá trị cho form
-    form.setFieldsValue({
-      us_email: 'vminhduc8@gmail.com',
-      us_password: 'M9{!,><XUru%t6%C'
-    })
-  }, [form])
+  const onFinish: FormProps<LoginForm>['onFinish'] = async (values) => {
+    setLoading(true)
+    const res = await login(values)
+    if (res?.code === 0 && res.data) {
+      setLoading(false)
+      runAppUser(res.data)
+      Toast('Thành công', 'Đăng nhập thành công', 'success')
+      if (res.data.us_role === 'admin') {
+        router.push('/dashboard')
+      } else {
+        router.push('/')
+      }
+    } else if (res?.code === -5) {
+      setLoading(false)
+      if (Array.isArray(res.message)) {
+        res.message.map((item: string) => {
+          Toast('Lỗi', item, 'warning')
+        })
+      } else {
+        Toast('Lỗi', res.message, 'warning')
+      }
+    } else {
+      setLoading(false)
+      Toast('Lỗi', res?.message || 'Đã có lỗi xảy ra, vui lòng thử lại sau', 'error')
+    }
+  }
 
   return (
     <Form
-      form={form}
       name='basic'
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
@@ -64,7 +69,13 @@ export default function LoginForm() {
       <Form.Item<LoginForm>
         label='Email'
         name='us_email'
-        rules={[{ required: true, message: 'Please input your username!' }]}
+        rules={[
+          { required: true, message: 'Vui lòng nhập email' },
+          {
+            type: 'email',
+            message: 'Email không đúng định dạng!'
+          }
+        ]}
       >
         <Input />
       </Form.Item>
@@ -72,10 +83,13 @@ export default function LoginForm() {
       <Form.Item<LoginForm>
         label='Password'
         name='us_password'
-        rules={[{ required: true, message: 'Please input your password!' }]}
+        rules={[{ required: true, message: 'Vui lòng nhập password' }]}
       >
         <Input.Password />
       </Form.Item>
+      <Button type='link'>
+        <Link href={'/forgot-password'}>Quên mật khẩu</Link>
+      </Button>
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type='primary' htmlType='submit'>
           Submit

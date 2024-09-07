@@ -1,19 +1,16 @@
-import { signIn } from '@/auth'
+'use client'
 import Link from 'next/link'
 import React from 'react'
+import { useSelector } from 'react-redux'
+import { RootState } from './redux/store'
 
 export default function HomePage() {
+  const userInfo = useSelector((state: RootState) => state.inforUser)
+  console.log(userInfo)
   return (
-    <>
-      <form
-        action={async () => {
-          'use server'
-          await signIn()
-        }}
-      >
-        <button type='submit'>Sign in</button>
-      </form>
+    <div className='flex flex-col'>
+      <Link href='/login'>Login</Link>
       <Link href='/register'>Register</Link>
-    </>
+    </div>
   )
 }
