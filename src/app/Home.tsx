@@ -6,7 +6,6 @@ import { RootState } from './redux/store'
 
 export default function HomePage() {
   const userInfo = useSelector((state: RootState) => state.inforUser)
-  console.log(userInfo)
   return (
     <div className='flex flex-col'>
       <Link href='/login'>Login</Link>

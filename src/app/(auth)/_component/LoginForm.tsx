@@ -24,6 +24,8 @@ export default function LoginForm() {
   const { setLoading } = useLoading()
   const dispatch = useDispatch()
   const router = useRouter()
+  const [form] = Form.useForm()
+
   const runAppUser = (inforUser: IUser) => {
     dispatch(startAppUser(inforUser))
   }
@@ -55,8 +57,11 @@ export default function LoginForm() {
     }
   }
 
+  form.setFieldsValue({ us_email: 'vminhduc8@gmail.com', us_password: 'Duc17052003*' })
+
   return (
     <Form
+      form={form}
       name='basic'
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}

@@ -8,6 +8,9 @@ import { addTag, getTag } from '../restaurant.api'
 import { Separator } from '@/components/ui/separator'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { IAmenity, IRestaurantType } from '../restaurant.interface'
+import { useRouter } from 'next/navigation'
+import { Toast } from '@/app/components/Notification'
+import { deleteCookiesAndRedirect } from '@/app/actions/action'
 
 export default function Tag({
   data,
@@ -28,6 +31,7 @@ export default function Tag({
 }) {
   const [inputValue, setInputValue] = useState('')
   const [tagArr, setTagArr] = useState<IAmenity[] | IRestaurantType[]>([])
+  const router = useRouter()
 
   const deleteArr = (index: number) => {
     const newData = [...data]
@@ -53,8 +57,14 @@ export default function Tag({
 
         setData([...data, { name, _id: res.data._id }])
         setInputValue('')
+      } else if (res.code === -10) {
+        Toast('Lỗi', 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại để tiếp tục sử dụng.', 'warning')
+        // router.push('/login')
+        await deleteCookiesAndRedirect()
+      } else if (res.code === -11) {
+        Toast('Thông báo', res.message, 'warning')
       } else {
-        // toast.error('Đã có lỗi xảy ra vui lòng thử lại')
+        Toast('Thông báo', res.message, 'warning')
       }
     }
   }
@@ -65,6 +75,12 @@ export default function Tag({
       setTagArr(res.data)
     } else if (res.statusCode === 404) {
       setTagArr([])
+    } else if (res.code === -10) {
+      Toast('Lỗi', 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại để tiếp tục sử dụng.', 'warning')
+      // router.push('/login')
+      await deleteCookiesAndRedirect()
+    } else if (res.code === -11) {
+      Toast('Thông báo', res.message, 'warning')
     }
   }
 

@@ -1,4 +1,4 @@
-import { IRestaurantHours } from '../(admin)/restaurant/restaurant.interface'
+import { IRestaurantHours } from "../dashboard/restaurant/restaurant.interface"
 
 export const checkDuplicateDays = (openingTimes: IRestaurantHours[]): string | null => {
   const dayCount: Record<string, number> = {}

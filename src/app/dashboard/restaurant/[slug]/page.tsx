@@ -4,6 +4,9 @@ import AddOrEdit from '../_component/AddOrEdit'
 import { getAllRestaurantRecycle, getRestaurantById } from '../restaurant.api'
 import { IRestaurant } from '../restaurant.interface'
 import GetPageRestaurantRecycle from '../_component/GetPageRecycle'
+import { redirect } from 'next/navigation'
+import ToastServer from '@/app/components/ToastServer'
+import { deleteCookiesAndRedirect } from '@/app/actions/action'
 
 interface PageProps {
   searchParams: { [key: string]: string }
@@ -21,20 +24,40 @@ async function Component({ searchParams, params }: PageProps) {
       current: searchParams.page ? searchParams.page : '1',
       pageSize: searchParams.size ? searchParams.size : '10'
     })
+    if (res.code === -10) {
+      deleteCookiesAndRedirect()
+    }
+    if (res.code === -11) {
+      return <ToastServer message='Bạn không có quyền truy cập' />
+    }
     if (!res || !res.data) {
-      return <div>Error fetching data</div>
+      return (
+        <>
+          <div>Error fetching data</div>
+        </>
+      )
     }
 
     const data = res.data.result.flat()
     return <GetPageRestaurantRecycle data={data} meta={res.data.meta} />
   }
 
-  const inforRestaurant: IBackendRes<IRestaurant> = await getRestaurantById({ id })
-  return (
-    <div>
-      <AddOrEdit id={id} inforRestaurant={inforRestaurant.data} />
-    </div>
-  )
+  const res: IBackendRes<IRestaurant> = await getRestaurantById({ id })
+  if (res.code === -10) {
+    deleteCookiesAndRedirect()
+    // redirect('/login')
+  }
+  if (res.code === -11) {
+    return <ToastServer message='Bạn không có quyền truy cập' />
+  }
+  if (!res || !res.data) {
+    return (
+      <>
+        <div>Error fetching data</div>
+      </>
+    )
+  }
+  return <AddOrEdit id={id} inforRestaurant={res.data} />
 }
 
 export default function Page(props: PageProps) {

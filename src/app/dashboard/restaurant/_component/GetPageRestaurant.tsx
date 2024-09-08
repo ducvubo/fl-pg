@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { deleteRestaurant, updateModify } from '../restaurant.api'
 import { Toast } from '@/app/components/Notification'
 import { useLoading } from '@/app/context/LoadingContext'
+import { deleteCookiesAndRedirect } from '@/app/actions/action'
 
 interface Props {
   data: IRestaurant[]
@@ -49,6 +50,14 @@ export default function GetPageRestaurant({ data, meta }: Props) {
       if (res.statusCode === 200) {
         Toast('Thành công', 'Nhà hàng đã được chuyển vào thùng rác', 'success')
         router.refresh()
+      } else if (res.code === -10) {
+        setLoading(false)
+        Toast('Lỗi', 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại để tiếp tục sử dụng.', 'warning')
+        // router.push('/login')
+        await deleteCookiesAndRedirect()
+      } else if (res.code === -11) {
+        setLoading(false)
+        Toast('Thông báo', res.message, 'warning')
       } else if (res.statusCode === 404) {
         Toast('Thất bại', 'Nhà hàng không tồn tại', 'warning')
       } else {
@@ -87,6 +96,14 @@ export default function GetPageRestaurant({ data, meta }: Props) {
         }
       } else if (res.statusCode === 404) {
         Toast('Thất bại', res.message, 'warning')
+      } else if (res.code === -10) {
+        setLoading(false)
+        Toast('Lỗi', 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại để tiếp tục sử dụng.', 'warning')
+        // router.push('/login')
+        await deleteCookiesAndRedirect()
+      } else if (res.code === -11) {
+        setLoading(false)
+        Toast('Thông báo', res.message, 'warning')
       } else {
         Toast('Thất bại', 'Đã có lỗi xảy ra, vui lòng thử lại sau', 'error')
       }
@@ -200,7 +217,7 @@ export default function GetPageRestaurant({ data, meta }: Props) {
         const items: MenuProps['items'] = [
           {
             key: '1',
-            label: <Link href={`/restaurant/${record._id}`}>Sửa</Link>
+            label: <Link href={`/dashboard/restaurant/${record._id}`}>Sửa</Link>
           },
           {
             key: '2',
@@ -230,7 +247,7 @@ export default function GetPageRestaurant({ data, meta }: Props) {
     showSizeChanger: true,
     pageSizeOptions: ['5', '10', '20', '50'],
     onChange: (page: number, pageSize: number) => {
-      router.push(`/restaurant?page=${page}&size=${pageSize}`)
+      router.push(`/dashboard/restaurant?page=${page}&size=${pageSize}`)
     }
   }
 

@@ -2,6 +2,7 @@
 import { sendRequest } from '@/lib/api'
 import { IToken, IUser } from './auth.interface'
 import { cookies } from 'next/headers'
+import { deleteCookie, deleteCookiesAndRedirect } from '../actions/action'
 
 export const getMe = async ({ access_token, refresh_token }: IToken) => {
   const res: IBackendRes<IUser> = await sendRequest({
@@ -175,6 +176,9 @@ export const reFreshTokenNew = async () => {
         code: -2
       }
     }
+  }
+  if (res.statusCode === 401 && res.code === -10) {
+    await deleteCookie()
   }
 }
 

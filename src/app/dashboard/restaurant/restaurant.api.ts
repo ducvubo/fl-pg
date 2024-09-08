@@ -1,7 +1,8 @@
 'use server'
 
 import { sendRequest } from '@/lib/api'
-import { IAmenity, IRestaurant, IRestaurantType } from './restaurant.interface'
+import { IRestaurant } from './restaurant.interface'
+import { deleteCookiesAndRedirect } from '@/app/actions/action'
 
 export const getTag = async (name: string, type: string) => {
   let url = ''
@@ -27,6 +28,11 @@ export const getTag = async (name: string, type: string) => {
       tag_name: name
     }
   })
+
+  if (res.statusCode === 401) {
+    await deleteCookiesAndRedirect()
+  }
+
   return res
 }
 
@@ -79,6 +85,12 @@ export const getAllRestaurant = async ({ current, pageSize }: { current: string;
       cache: 'no-store'
     }
   })
+  // if (res.statusCode === 401 && res.code === -10) {
+  //   return {
+  //     code: -10,
+  //     message: 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại để tiếp tục sử dụng.'
+  //   }
+  // }
   return res
 }
 

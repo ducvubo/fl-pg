@@ -14,6 +14,8 @@ import { dayOfWeek, defaultOverview, defaultParkingArea, defaultPropose, default
 import { Toast } from '@/app/components/Notification'
 import { useLoading } from '@/app/context/LoadingContext'
 import { checkDuplicateDays } from '@/app/utils'
+import { useRouter } from 'next/navigation'
+import { deleteCookiesAndRedirect } from '@/app/actions/action'
 const Editor = dynamic(() => import('@/app/components/Editor'), { ssr: false })
 const { Option } = Select
 
@@ -42,6 +44,7 @@ interface Props {
 
 export default function AddOrEdit({ id, inforRestaurant }: Props) {
   const { setLoading } = useLoading()
+  const router = useRouter()
   const [form] = Form.useForm()
   const [listCategory, setlistCategory] = useState<ICategory[]>([])
   const [previewOpen, setPreviewOpen] = useState(false)
@@ -235,6 +238,14 @@ export default function AddOrEdit({ id, inforRestaurant }: Props) {
         } else if (res.statusCode === 409) {
           setLoading(false)
           Toast('Lỗi', res.message, 'warning')
+        } else if (res.code === -10) {
+          setLoading(false)
+          Toast('Lỗi', 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại để tiếp tục sử dụng.', 'warning')
+          // router.push('/login')
+          await deleteCookiesAndRedirect()
+        } else if (res.code === -11) {
+          setLoading(false)
+          Toast('Thông báo', res.message, 'warning')
         }
       } else {
         const res = await updateRestaurant({ ...payload, _id: id })
@@ -253,13 +264,20 @@ export default function AddOrEdit({ id, inforRestaurant }: Props) {
         } else if (res.statusCode === 409) {
           setLoading(false)
           Toast('Lỗi', res.message, 'warning')
+        } else if (res.code === -10) {
+          setLoading(false)
+          Toast('Lỗi', 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại để tiếp tục sử dụng.', 'warning')
+          // router.push('/login')
+          await deleteCookiesAndRedirect()
+        } else if (res.code === -11) {
+          setLoading(false)
+          Toast('Thông báo', res.message, 'warning')
         }
       }
     } catch (error) {
       setLoading(false)
       Toast('Lỗi không xác định', 'Vui lòng thử lại sau', 'error')
     }
-
   }
 
   const onFinishFailed: FormProps<IRestaurant>['onFinishFailed'] = (errorInfo) => {
