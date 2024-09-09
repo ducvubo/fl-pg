@@ -267,7 +267,6 @@ export default function AddOrEdit({ id, inforRestaurant }: Props) {
         } else if (res.code === -10) {
           setLoading(false)
           Toast('Lỗi', 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại để tiếp tục sử dụng.', 'warning')
-          // router.push('/login')
           await deleteCookiesAndRedirect()
         } else if (res.code === -11) {
           setLoading(false)
@@ -353,7 +352,7 @@ export default function AddOrEdit({ id, inforRestaurant }: Props) {
   }, [id, inforRestaurant])
 
   useEffect(() => {
-    if (imageBanner.length > 0) {
+    if (imageRestaurant.length > 0) {
       form.setFieldsValue({
         restaurant_image: imageRestaurant.map((item) => {
           if (item.response?.statusCode === 201) return item.response?.data

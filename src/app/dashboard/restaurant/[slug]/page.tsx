@@ -42,6 +42,8 @@ async function Component({ searchParams, params }: PageProps) {
     return <GetPageRestaurantRecycle data={data} meta={res.data.meta} />
   }
 
+  
+
   const res: IBackendRes<IRestaurant> = await getRestaurantById({ id })
   if (res.code === -10) {
     deleteCookiesAndRedirect()

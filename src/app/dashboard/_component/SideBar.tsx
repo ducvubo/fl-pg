@@ -27,8 +27,8 @@ const items: MenuItem[] = [
   ]),
   getItem('Quản lý người dùng', '5', <UserOutlined />, [
     getItem(<Link href={'/dashboard/user/add'}>Thêm nguời dùng</Link>, '7'),
-    getItem(<Link href={'/dashboard/restaurant?page=1&size=10'}>Danh sách người dùng</Link>, '8'),
-    getItem(<Link href={'/dashboard/restaurant/recycle?page=1&size=10'}>Người dùng đã xóa</Link>, '9')
+    getItem(<Link href={'/dashboard/user?page=1&size=10'}>Danh sách người dùng</Link>, '8'),
+    getItem(<Link href={'/dashboard/user/recycle?page=1&size=10'}>Người dùng đã xóa</Link>, '9')
   ])
 ]
 

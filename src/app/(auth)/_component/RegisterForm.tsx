@@ -58,10 +58,10 @@ export default function RegisterForm() {
       setLoading(false)
       Toast('Thành công', 'Xác nhận thành công', 'success')
       runAppUser(res.data)
-      if (res.data.us_role === 'admin') {
+      if (res.data.us_role.rl_name === 'admin') {
         router.push('/dashboard')
       }
-      if (res.data.us_role === 'user') {
+      if (res.data.us_role.rl_name === 'user') {
         router.push('/')
       }
     } else if (res?.code === -1) {

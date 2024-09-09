@@ -20,10 +20,10 @@ export default function RefreshToken() {
       const currentPathname = window.location.pathname
 
       // Navigate based on user role if not already on the target page
-      if (res.data.us_role === 'admin' && !currentPathname.startsWith('/dashboard')) {
+      if (res.data.us_role.rl_name === 'admin' && !currentPathname.startsWith('/dashboard')) {
         router.push('/dashboard')
       }
-      if (res.data.us_role !== 'admin') {
+      if (res.data.us_role.rl_name !== 'admin') {
         router.push('/')
       }
     }

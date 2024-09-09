@@ -19,7 +19,6 @@ async function Component({ searchParams }: RestaurantPageProps) {
 
   if (res.code === -10) {
     deleteCookiesAndRedirect()
-    // redirect('/login')
   }
   if (res.code === -11) {
     return <ToastServer message='Bạn không có quyền truy cập' />

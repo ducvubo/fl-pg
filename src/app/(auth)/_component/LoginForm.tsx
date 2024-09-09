@@ -37,7 +37,7 @@ export default function LoginForm() {
       setLoading(false)
       runAppUser(res.data)
       Toast('Thành công', 'Đăng nhập thành công', 'success')
-      if (res.data.us_role === 'admin') {
+      if (res.data.us_role.rl_name === 'admin') {
         router.push('/dashboard')
       } else {
         router.push('/')
