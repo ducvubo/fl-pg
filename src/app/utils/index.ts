@@ -1,4 +1,4 @@
-import { IRestaurantHours } from "../dashboard/restaurant/restaurant.interface"
+import { IRestaurantHours } from '../dashboard/restaurant/restaurant.interface'
 
 export const checkDuplicateDays = (openingTimes: IRestaurantHours[]): string | null => {
   const dayCount: Record<string, number> = {}
@@ -13,4 +13,9 @@ export const checkDuplicateDays = (openingTimes: IRestaurantHours[]): string | n
   }
 
   return null // Không có lỗi
+}
+
+export const isNumericString = (str: string) => {
+  // Kiểm tra xem chuỗi có chỉ chứa các ký tự số (0-9) hay không
+  return /^[0-9]{10,}$/.test(str)
 }
