@@ -321,3 +321,7 @@ export const changePassword = async ({
     }
   }
 }
+
+export const logout = async () => {
+  await deleteCookie()
+}

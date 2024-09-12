@@ -114,9 +114,7 @@ export default function AddOrEdit({ id, inforUser }: Props) {
   useEffect(() => {
     if (imageAvatar.length > 0) {
       const updatedBanner = imageAvatar[0]?.response?.data
-        ? imageAvatar[0]?.response?.data?.image_local
-          ? imageAvatar[0]?.response?.data?.image_local
-          : imageAvatar[0]?.response?.data?.image_cloud
+        ? imageAvatar[0]?.response?.data?.image_cloud
         : imageAvatar[0]?.thumbUrl
       setImageAvatar([
         {

@@ -1,11 +1,17 @@
 'use client'
-import React, { useRef, useState } from 'react'
+import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { Editor } from '@tinymce/tinymce-react'
-import './abc.css'
+import { Toast } from './Notification'
 
-export default function EditorTinytest() {
+interface Props {
+  data: string
+  setData: Dispatch<SetStateAction<string>>
+  defaultData?: string
+  width?: string // Thêm thuộc tính width
+  height?: string // Thêm thuộc tính height
+}
+export default function EditorTiny({ data, setData, defaultData, width = '100%', height = '400px' }: Props) {
   const editorRef = useRef<any>(null)
-  const [editorContent, setEditorContent] = useState<string>('')
   const handleImageUpload: any = (blobInfo: any, progress: any, failure: any) => {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest()
@@ -23,24 +29,29 @@ export default function EditorTinytest() {
       }
 
       xhr.onload = () => {
-        if (xhr.status === 403) {
-          reject({ message: 'HTTP Error: ' + xhr.status, remove: true })
+        // console.log(xhr)
+        // if (xhr.status === 403) {
+        //   reject({ message: 'HTTP Error: ' + xhr.status, remove: true })
+        //   return
+        // }
+
+        // if (xhr.status < 200 || xhr.status >= 300) {
+        //   reject('HTTP Error: ' + xhr.status)
+        //   return
+        // }
+
+        const res = JSON.parse(xhr.responseText)
+        if (res.statusCode === 400) {
+          Toast('Lỗi', 'Vui lòng chọn ảnh có định dạng jpg, jpeg, png, webp', 'warning')
+          reject('Vui lòng chọn ảnh có định dạng jpg, jpeg, png, webp')
           return
         }
-
-        if (xhr.status < 200 || xhr.status >= 300) {
-          reject('HTTP Error: ' + xhr.status)
+        if (res.statusCode === 413) {
+          Toast('Lỗi', 'Dung lượng ảnh quá lớn vui lòng chọn ảnh dưới 5MB', 'warning')
+          reject('Dung lượng ảnh quá lớn vui lòng chọn ảnh dưới 5MB')
           return
         }
-
-        const json = JSON.parse(xhr.responseText)
-
-        if (!json || typeof json.url != 'string') {
-          reject('Invalid JSON: ' + xhr.responseText)
-          return
-        }
-        console.log(json.url)
-        resolve(json.url)
+        resolve(res.data.image_cloud)
       }
 
       xhr.onerror = () => {
@@ -55,19 +66,13 @@ export default function EditorTinytest() {
   }
 
   const handleEditorChange = (content: string) => {
-    setEditorContent(content)
+    setData(content)
   }
-  console.log(editorContent)
   return (
-    <div>
+    <div style={{ width, height }}>
       <Editor
         apiKey={`${process.env.NEXT_PUBLIC_API_KEY_TINY_CME}`}
         onInit={(evt, editor) => (editorRef.current = editor)}
-        // onChange={() => {
-        //   if (editorRef.current) {
-        //     handleEditorChange(editorRef.current.getContent())
-        //   }
-        // }}
         onEditorChange={handleEditorChange}
         init={{
           plugins: [
@@ -131,25 +136,9 @@ export default function EditorTinytest() {
             border: '1px solid #ccc',
             'border-collapse': 'collapse'
           }
-          // table_default_styles: {
-          //   'border-collapsed': 'collapse',
-          //   width: 'auto'
-          // },
-          // invalid_styles: {
-          //   td: 'width height',
-          //   th: 'width height',
-          //   tr: 'height'
-          // },
-          // table_responsive_width: true,
-          // table_resize_bars: false
         }}
-        initialValue=''
+        initialValue={defaultData ? defaultData : ''}
       />
-
-      <div>
-        <h2>Rendered HTML:</h2>
-        <div dangerouslySetInnerHTML={{ __html: editorContent }} />
-      </div>
     </div>
   )
 }

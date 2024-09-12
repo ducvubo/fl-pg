@@ -16,6 +16,7 @@ import { useLoading } from '@/app/context/LoadingContext'
 import { checkDuplicateDays } from '@/app/utils'
 import { useRouter } from 'next/navigation'
 import { deleteCookiesAndRedirect } from '@/app/actions/action'
+import EditorTiny from '@/app/components/EditorTiny'
 const Editor = dynamic(() => import('@/app/components/Editor'), { ssr: false })
 const { Option } = Select
 
@@ -179,9 +180,7 @@ export default function AddOrEdit({ id, inforRestaurant }: Props) {
   useEffect(() => {
     if (imageBanner.length > 0) {
       const updatedBanner = imageBanner[0]?.response?.data
-        ? imageBanner[0]?.response?.data?.image_local
-          ? imageBanner[0]?.response?.data?.image_local
-          : imageBanner[0]?.response?.data?.image_cloud
+        ? imageBanner[0]?.response?.data?.image_cloud
         : imageBanner[0]?.thumbUrl
       setImageBanner([
         {
@@ -329,7 +328,6 @@ export default function AddOrEdit({ id, inforRestaurant }: Props) {
           response: {
             statusCode: 201,
             data: {
-              image_local: item.image_local,
               image_cloud: item.image_cloud,
               image_custom: item.image_custom
             }
@@ -704,35 +702,35 @@ export default function AddOrEdit({ id, inforRestaurant }: Props) {
       <div className='flex ml-[208px] mb-10'>
         <label className='mr-2 whitespace-nowrap'>Đề xuất: </label>
         <div>
-          <Editor data={propose} setData={setPropose} defaultData={propose} />
+          <EditorTiny data={propose} setData={setPropose} defaultData={propose} width='900px' />
         </div>
       </div>
 
       <div className='flex ml-[209px] mb-10'>
         <label className='mr-2 whitespace-nowrap'>Tóm tắt: </label>
         <div>
-          <Editor data={overview} setData={setOverview} defaultData={overview} />
+          <EditorTiny data={overview} setData={setOverview} defaultData={overview} width='900px' />
         </div>
       </div>
 
       <div className='flex ml-[200px] mb-10'>
         <label className='mr-2 whitespace-nowrap'>Quy định: </label>
         <div>
-          <Editor data={regulation} setData={setRegulation} defaultData={regulation} />
+          <EditorTiny data={regulation} setData={setRegulation} defaultData={regulation} width='900px' />
         </div>
       </div>
 
       <div className='flex ml-[195px] mb-10'>
         <label className='mr-2 whitespace-nowrap'>Chỗ để xe: </label>
         <div>
-          <Editor data={parkingArea} setData={setParkingArea} defaultData={parkingArea} />
+          <EditorTiny data={parkingArea} setData={setParkingArea} defaultData={parkingArea} width='900px' />
         </div>
       </div>
 
       <div className='flex ml-[160px] mb-10'>
         <label className='mr-2 whitespace-nowrap'>Mô tả nhà hàng: </label>
         <div>
-          <Editor data={description} setData={setDescription} defaultData={description} />
+          <EditorTiny data={description} setData={setDescription} defaultData={description} width='900px' />
         </div>
       </div>
 

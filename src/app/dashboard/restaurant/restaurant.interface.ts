@@ -2,7 +2,6 @@ import { ICategory } from '../category/category.interface'
 
 export interface IUpLoadImage {
   image_cloud: string
-  image_local: string
   image_custom: string
 }
 

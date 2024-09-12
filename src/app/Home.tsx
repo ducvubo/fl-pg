@@ -1,15 +1,19 @@
-'use client'
 import Link from 'next/link'
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { RootState } from './redux/store'
+import Header from './components/Header'
+import Footer from './components/Footer'
+import CarouselRestaurant from './components/Carousel'
 
 export default function HomePage() {
-  const userInfo = useSelector((state: RootState) => state.inforUser)
   return (
-    <div className='flex flex-col'>
-      <Link href='/login'>Login</Link>
-      <Link href='/register'>Register</Link>
-    </div>
+    <>
+      <Header />
+      <CarouselRestaurant />
+      {/* // <div className='flex flex-col'>
+    //   <Link href='/login'>Login</Link>
+    //   <Link href='/register'>Register</Link>
+    // </div> */}
+      <Footer />
+    </>
   )
 }

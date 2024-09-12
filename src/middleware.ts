@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-const authPaths = ['/login', '/register', 'forgot-password']
+const authPaths = ['/login', '/register', '/forgot-password']
 const adminPaths = ['/dashboard']
 const userPaths = ['/']
 // This function can be marked `async` if using `await` inside

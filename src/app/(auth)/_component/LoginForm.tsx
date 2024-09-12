@@ -40,7 +40,7 @@ export default function LoginForm() {
       if (res.data.us_role.rl_name === 'admin') {
         router.push('/dashboard')
       } else {
-        router.push('/')
+        router.push('/thong-tin-tai-khoan')
       }
     } else if (res?.code === -5) {
       setLoading(false)
