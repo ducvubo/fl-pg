@@ -19,3 +19,7 @@ export const isNumericString = (str: string) => {
   // Kiểm tra xem chuỗi có chỉ chứa các ký tự số (0-9) hay không
   return /^[0-9]{10,}$/.test(str)
 }
+
+export const FormatDayOfWeek = (day_of_week: string) => {
+  return day_of_week.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+}

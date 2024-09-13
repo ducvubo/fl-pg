@@ -2,15 +2,15 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import clsx from 'clsx'
 // import { Button } from '@/components/ui/button'
-import { Button, Input } from 'antd'
+import { Button } from 'antd'
 import _ from 'lodash'
 import { addTag, getTag } from '../restaurant.api'
-import { Separator } from '@/components/ui/separator'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { IAmenity, IRestaurantType } from '../restaurant.interface'
 import { useRouter } from 'next/navigation'
 import { Toast } from '@/app/components/Notification'
 import { deleteCookiesAndRedirect } from '@/app/actions/action'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Separator } from '@/components/ui/separator'
 
 export default function Tag({
   data,
@@ -151,7 +151,7 @@ export default function Tag({
               )
             })}
           </ul>
-          <Input
+          <input
             type='text'
             className={clsx(
               ' w-full min-w-[20rem] flex-1 border-none text-sm outline-none focus:border-none focus:outline-none focus:ring-0 lg:text-base relative',

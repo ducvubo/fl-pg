@@ -34,10 +34,14 @@ export default function CarouselRestaurant() {
   const [listRestaurant, setListRestaurant] = useState<IRestaurantHome[]>([])
 
   const listRestaurants = async () => {
-    const res: IBackendRes<IRestaurantHome[]> = await getRestaurant()
-    if (res.statusCode === 200 && res.data) {
-      setListRestaurant(res.data)
-    } else {
+    try {
+      const res: IBackendRes<IRestaurantHome[]> = await getRestaurant()
+      if (res.statusCode === 200 && res.data) {
+        setListRestaurant(res.data)
+      } else {
+        Toast('Lỗi', 'Đã có lỗi xảy ra vui lòng thử lại sau ít phút', 'error')
+      }
+    } catch (error) {
       Toast('Lỗi', 'Đã có lỗi xảy ra vui lòng thử lại sau ít phút', 'error')
     }
   }
