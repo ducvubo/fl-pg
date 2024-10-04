@@ -15,14 +15,14 @@ import { getRestaurantBySlug, IRestaurantBySlug } from '../api'
 import { Toast } from '@/app/components/Notification'
 import { useLoading } from '@/app/context/LoadingContext'
 import { Hour } from '@/app/dashboard/restaurant/_component/Default.data'
- const NextArrow = (props: any) => {
+const NextArrow = (props: any) => {
   const { className, style, onClick } = props
   return (
     <div className={className} style={{ ...style, display: 'block', right: '10px', zIndex: 1 }} onClick={onClick} />
   )
 }
 
- const PrevArrow = (props: any) => {
+const PrevArrow = (props: any) => {
   const { className, style, onClick } = props
   return <div className={className} style={{ ...style, display: 'block', left: '10px', zIndex: 1 }} onClick={onClick} />
 }
@@ -37,7 +37,7 @@ const settings = {
   prevArrow: <PrevArrow className='bg-black' />
 }
 
-export const findTimeObject = (value: any) => {
+const findTimeObject = (value: any) => {
   return Hour.find((t) => t.value === value) || { label: '', value }
 }
 export default function ThongTinNhaHang({ params }: { params: { slug: string } }) {
