@@ -21,5 +21,8 @@ export const isNumericString = (str: string) => {
 }
 
 export const FormatDayOfWeek = (day_of_week: string) => {
-  return day_of_week.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+  return day_of_week
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
 }

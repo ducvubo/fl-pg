@@ -11,11 +11,13 @@ import { Hour } from '@/app/dashboard/restaurant/_component/Default.data'
 import localeData from 'dayjs/plugin/localeData'
 import { FormatDayOfWeek } from '@/app/utils'
 import { Toast } from '@/app/components/Notification'
+import { createBookTable } from '../api'
+import { useRouter } from 'next/navigation'
 
 // Cài đặt localeData plugin để lấy thông tin thứ
 dayjs.extend(localeData)
 dayjs.locale('vi')
-interface IHour {
+export interface IHour {
   day_of_week: string
   open: HuorLBVl
   close: HuorLBVl
@@ -25,22 +27,24 @@ export interface HuorLBVl {
   value: number
 }
 
-interface FieldForm {
+export interface FieldForm {
   number_adults: number
   number_children: number
   arrival_date: Date
   arrival_time: number | HuorLBVl
 }
 
-interface Props {
+export interface Props {
+  _id?: string
+  slug: string
   restaurant_hours: IHour[]
 }
 
-const disabledDate = (current: any) => {
+export const disabledDate = (current: any) => {
   return current && current < dayjs().startOf('day')
 }
 
-const getNextTime = (currentTime: any) => {
+export const getNextTime = (currentTime: any) => {
   // Chuyển đổi giờ hiện tại thành định dạng 24h (HH:mm)
   const currentHour = currentTime.hour()
   const currentMinute = currentTime.minute()
@@ -57,7 +61,7 @@ const getNextTime = (currentTime: any) => {
   return Hour[0] // Quay lại giờ đầu tiên trong mảng
 }
 
-const dayOfWeekMap: { [key: string]: number } = {
+export const dayOfWeekMap: { [key: string]: number } = {
   'Chủ Nhật': 0,
   'Thứ Hai': 1,
   'Thứ Ba': 2,
@@ -67,7 +71,7 @@ const dayOfWeekMap: { [key: string]: number } = {
   'Thứ Bảy': 6
 }
 
-const getTimeObject = (value: number): HuorLBVl | null => {
+export const getTimeObject = (value: number): HuorLBVl | null => {
   // Find the time object with the matching value
   const timeObject = Hour.find((item) => item.value === value)
 
@@ -75,7 +79,8 @@ const getTimeObject = (value: number): HuorLBVl | null => {
   return timeObject || null
 }
 
-export default function FormBookTable({ restaurant_hours }: Props) {
+export default function FormBookTable({ restaurant_hours, _id, slug }: Props) {
+  const router = useRouter()
   const timeNow = getNextTime(dayjs())
   const [checkDate, setcheckDate] = useState(dayjs())
 
@@ -103,11 +108,13 @@ export default function FormBookTable({ restaurant_hours }: Props) {
     return Hour
   }, [checkDate])
 
-  const onFinish: FormProps<FieldForm>['onFinish'] = (values) => {
+  const onFinish: FormProps<FieldForm>['onFinish'] = async (values) => {
     const arrivalDate = values.arrival_date
     const dayOfWeek = arrivalDate ? dayjs(arrivalDate).format('dddd') : null
+    console.log(dayOfWeek)
     const validDays = restaurant_hours.map((item) => item.day_of_week)
     const formatDayOfWeek = FormatDayOfWeek(dayOfWeek as string)
+    console.log(formatDayOfWeek)
     if (!validDays.includes(formatDayOfWeek)) {
       Toast('Lỗi', 'Nhà hàng không mở cửa vào ngày này', 'error')
       return
@@ -125,11 +132,26 @@ export default function FormBookTable({ restaurant_hours }: Props) {
       )
       return
     }
-    console.log(objectForDay)
-
     values.arrival_time = getTimeObject(+values.arrival_time) as HuorLBVl
 
-    console.log('Success:', values)
+    router.push(
+      `/dat-cho-ngay?slug=${slug}&book_tb_date=${values.arrival_date}&book_tb_hour_label=${values.arrival_time.label}&book_tb_hour_value=${values.arrival_time.value}&book_tb_number_adults=${values.number_adults}&book_tb_number_children=${values.number_children}`
+    )
+
+    // const res = await createBookTable({
+    //   book_tb_restaurant_id: _id,
+    //   book_tb_email: 'vminhduc8@gmail.com',
+    //   book_tb_phone: '098765434567',
+    //   book_tb_name: 'Vũ Đức Bo',
+    //   book_tb_date: values.arrival_date,
+    //   book_tb_hour: values.arrival_time,
+    //   book_tb_number_adults: values.number_adults,
+    //   book_tb_number_children: values.number_children,
+    //   book_tb_note: 'Không',
+    //   book_tb_redirect_url: 'http://localhost:3000/confirm-book-table'
+    // })
+
+    // Toast('Thành công', res.message, 'success')
   }
 
   return (
@@ -173,9 +195,7 @@ export default function FormBookTable({ restaurant_hours }: Props) {
               label={
                 <div className='flex gap-2'>
                   <MdChildCare fontSize={'1.3em'} />
-                  <span className='font-medium'>
-                    Trẻ em: <span className='font-normal'>(dưới 10 tuổi)</span>{' '}
-                  </span>
+                  <span className='font-medium'>Trẻ em:</span>
                 </div>
               }
               className='w-full'

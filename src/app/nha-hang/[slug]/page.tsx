@@ -37,7 +37,7 @@ const settings = {
   prevArrow: <PrevArrow className='bg-black' />
 }
 
-const findTimeObject = (value: any) => {
+export const findTimeObject = (value: any) => {
   return Hour.find((t) => t.value === value) || { label: '', value }
 }
 export default function ThongTinNhaHang({ params }: { params: { slug: string } }) {
@@ -174,7 +174,11 @@ export default function ThongTinNhaHang({ params }: { params: { slug: string } }
             <span className='font-medium mt-[5px] ml-1'>(Để có chỗ trước khi đến)</span>
           </Row>
           <Row>
-            <FormBookTable restaurant_hours={restaurant?.restaurant_hours as any} />
+            <FormBookTable
+              restaurant_hours={restaurant?.restaurant_hours as any}
+              _id={restaurant?._id}
+              slug={params.slug}
+            />
           </Row>
         </Col>
       </Row>

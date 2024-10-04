@@ -196,7 +196,7 @@ export default function AddOrEdit({ id, inforRestaurant }: Props) {
   }, [imageBanner[0]?.response])
 
   const onFinish: FormProps<IRestaurant>['onFinish'] = async (values) => {
-    setLoading(true)
+    // setLoading(true)
     const restaurant_address: any = CustomAddress(dataAdress, values)
 
     const restaurant_amenity = amenity.map((item: any) => item._id)

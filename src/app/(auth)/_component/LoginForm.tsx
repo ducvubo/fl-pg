@@ -22,9 +22,9 @@ const onFinishFailed: FormProps<LoginForm>['onFinishFailed'] = (errorInfo) => {
 
 export default function LoginForm() {
   const { setLoading } = useLoading()
+  const [form] = Form.useForm()
   const dispatch = useDispatch()
   const router = useRouter()
-  const [form] = Form.useForm()
 
   const runAppUser = (inforUser: IUser) => {
     dispatch(startAppUser(inforUser))

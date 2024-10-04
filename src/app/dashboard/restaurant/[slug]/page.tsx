@@ -7,7 +7,10 @@ import GetPageRestaurantRecycle from '../_component/GetPageRecycle'
 import { redirect } from 'next/navigation'
 import ToastServer from '@/app/components/ToastServer'
 import { deleteCookiesAndRedirect } from '@/app/actions/action'
-
+import dynamic from 'next/dynamic'
+const ToastSeverRedirect = dynamic(() => import('@/app/components/ToastServerRedirect'), {
+  ssr: false
+})
 interface PageProps {
   searchParams: { [key: string]: string }
   params: { slug: string }
@@ -42,9 +45,12 @@ async function Component({ searchParams, params }: PageProps) {
     return <GetPageRestaurantRecycle data={data} meta={res.data.meta} />
   }
 
-  
-
   const res: IBackendRes<IRestaurant> = await getRestaurantById({ id })
+
+  if (res.statusCode === 404) {
+    return <ToastSeverRedirect message='Nhà hàng không tồn tại' route='/dashboard/restaurant' />
+  }
+
   if (res.code === -10) {
     deleteCookiesAndRedirect()
     // redirect('/login')

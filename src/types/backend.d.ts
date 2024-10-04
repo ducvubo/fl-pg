@@ -4,7 +4,7 @@ export {}
 declare global {
   interface IRequest {
     url: string
-    method: string
+    method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
     body?: { [key: string]: any }
     queryParams?: any
     useCredentials?: boolean

@@ -9,6 +9,7 @@ export const sendRequest = async <T>(props: IRequest) => {
   const access_token = cookie.get('access_token')?.value
   const refresh_token = cookie.get('refresh_token')?.value
   const id_user_guest = cookie.get('id_user_guest')?.value
+  console.log('id_user_guest', id_user_guest)
   if (access_token && refresh_token) {
     options = {
       method: method,
@@ -17,6 +18,7 @@ export const sendRequest = async <T>(props: IRequest) => {
         'content-type': 'application/json',
         'x-at-tk': `Bearer ${access_token}`,
         'x-rf-tk': `Bearer ${refresh_token}`,
+        id_user_guest: id_user_guest,
         ...headers
       }),
       body: body ? JSON.stringify(body) : null,
@@ -27,7 +29,7 @@ export const sendRequest = async <T>(props: IRequest) => {
     options = {
       method: method,
       // by default setting the content-type to be json type
-      headers: new Headers({ 'content-type': 'application/json', ...headers }),
+      headers: new Headers({ 'content-type': 'application/json', ...headers, id_user_guest: id_user_guest }),
       body: body ? JSON.stringify(body) : null,
       ...nextOption
     }
@@ -49,8 +51,8 @@ export const sendRequest = async <T>(props: IRequest) => {
           path: '/',
           httpOnly: true,
           secure: true,
-          sameSite: 'lax',
-          maxAge: 60 * 60 * 24 * 15 // 15 ngày
+          sameSite: 'lax'
+          // maxAge: 60 * 60 * 24 * 15 // 15 ngày
         })
       }
     }

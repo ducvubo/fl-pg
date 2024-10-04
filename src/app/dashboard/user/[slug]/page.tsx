@@ -6,7 +6,10 @@ import GetPageUserRecycle from '../_component/GetPageUserRecycle'
 import { IUserModel } from '../user.interface'
 import ToastServer from '@/app/components/ToastServer'
 import { getAllUser, getUserById } from '../user.api'
-
+import dynamic from 'next/dynamic'
+const ToastSeverRedirect = dynamic(() => import('@/app/components/ToastServerRedirect'), {
+  ssr: false
+})
 interface PageProps {
   searchParams: { [key: string]: string }
   params: { slug: string }
@@ -45,6 +48,11 @@ async function Component({ searchParams, params }: PageProps) {
   }
 
   const res: IBackendRes<IUserModel> = await getUserById({ id })
+
+  if (res.statusCode === 404) {
+    return <ToastSeverRedirect message='Nhà hàng không tồn tại' route='/dashboard/user' />
+  }
+
   if (res.code === -10) {
     deleteCookiesAndRedirect()
   }

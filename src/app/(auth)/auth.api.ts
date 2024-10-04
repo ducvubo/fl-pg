@@ -25,6 +25,7 @@ export const login = async ({ us_email, us_password }: { us_email: string; us_pa
       us_password
     }
   })
+  console.log(res)
   if (res.statusCode === 201 && res.data) {
     const data = await Promise.all([
       await cookies().set({
@@ -49,6 +50,8 @@ export const login = async ({ us_email, us_password }: { us_email: string; us_pa
     ])
 
     const resProfile: IBackendRes<IUser> = data[2]
+
+    console.log('resProfile:::::::', resProfile)
 
     if (resProfile.statusCode === 200 && resProfile.data) {
       return {

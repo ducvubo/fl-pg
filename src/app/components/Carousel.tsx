@@ -18,14 +18,14 @@ const contentStyle: React.CSSProperties = {
   background: '#364d79'
 }
 
-export const NextArrow = (props: any) => {
+ const NextArrow = (props: any) => {
   const { className, style, onClick } = props
   return (
     <div className={className} style={{ ...style, display: 'block', right: '10px', zIndex: 1 }} onClick={onClick} />
   )
 }
 
-export const PrevArrow = (props: any) => {
+ const PrevArrow = (props: any) => {
   const { className, style, onClick } = props
   return <div className={className} style={{ ...style, display: 'block', left: '10px', zIndex: 1 }} onClick={onClick} />
 }
