@@ -15,14 +15,14 @@ import { getRestaurantBySlug, IRestaurantBySlug } from '../api'
 import { Toast } from '@/app/components/Notification'
 import { useLoading } from '@/app/context/LoadingContext'
 import { Hour } from '@/app/dashboard/restaurant/_component/Default.data'
-export const NextArrow = (props: any) => {
+ const NextArrow = (props: any) => {
   const { className, style, onClick } = props
   return (
     <div className={className} style={{ ...style, display: 'block', right: '10px', zIndex: 1 }} onClick={onClick} />
   )
 }
 
-export const PrevArrow = (props: any) => {
+ const PrevArrow = (props: any) => {
   const { className, style, onClick } = props
   return <div className={className} style={{ ...style, display: 'block', left: '10px', zIndex: 1 }} onClick={onClick} />
 }
