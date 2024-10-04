@@ -4,7 +4,6 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { createBookTable, getRestaurantBySlug, IRestaurantBySlug } from '../nha-hang/api'
 import { Toast } from '../components/Notification'
 import { useLoading } from '../context/LoadingContext'
-import { findTimeObject } from '../nha-hang/[slug]/page'
 import {
   dayOfWeekMap,
   disabledDate,
@@ -39,6 +38,10 @@ export interface FieldForm {
   book_tb_phone: string
   book_tb_name: string
   book_tb_note: string
+}
+
+const findTimeObject = (value: any) => {
+  return Hour.find((t) => t.value === value) || { label: '', value }
 }
 
 export default function DatChoNgayPage() {
