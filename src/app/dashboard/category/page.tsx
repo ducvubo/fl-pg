@@ -1,25 +1,23 @@
 import React, { Suspense } from 'react'
-
 import LoadingServer from '@/components/LoadingServer'
+import { redirect } from 'next/navigation'
 import ToastServer from '@/app/components/ToastServer'
 import { deleteCookiesAndRedirect } from '@/app/actions/action'
-import { getAllUser } from './user.api'
-import { IUserModel } from './user.interface'
-import GetPageUser from './_component/GetPageUser'
 import LogoutPage from '@/app/(auth)/logout/page'
+import { getCategoryPagination } from './category.api'
+import { IRestaurant } from '../restaurant/restaurant.interface'
+import GetPageCategory from './_component/GetPageCategory'
+import { ICategory } from './category.interface'
 
-interface UserPageProps {
+interface PageProps {
   searchParams: { [key: string]: string }
 }
 
-async function Component({ searchParams }: UserPageProps) {
-  const res: IBackendRes<IModelPaginate<IUserModel>> = await getAllUser(
-    {
-      current: searchParams.page ? searchParams.page : '1',
-      pageSize: searchParams.size ? searchParams.size : '10'
-    },
-    'all'
-  )
+async function Component({ searchParams }: PageProps) {
+  const res: IBackendRes<IModelPaginate<ICategory>> = await getCategoryPagination({
+    current: searchParams.page ? searchParams.page : '1',
+    pageSize: searchParams.size ? searchParams.size : '10'
+  })
 
   if (res.code === -10) {
     return <LogoutPage />
@@ -38,12 +36,13 @@ async function Component({ searchParams }: UserPageProps) {
 
   return (
     <div>
-      <GetPageUser data={res.data.result} meta={res.data.meta} />
+      {/* <GetPa data={data} meta={res.data.meta} /> */}
+      <GetPageCategory data={res.data.result} meta={res.data.meta} />
     </div>
   )
 }
 
-export default function Page(props: UserPageProps) {
+export default function Page(props: PageProps) {
   return (
     <div>
       <Suspense fallback={<LoadingServer />}>

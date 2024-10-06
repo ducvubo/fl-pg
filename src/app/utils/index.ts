@@ -26,3 +26,4 @@ export const FormatDayOfWeek = (day_of_week: string) => {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ')
 }
+

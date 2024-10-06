@@ -43,9 +43,10 @@
 import React, { useLayoutEffect } from 'react'
 import { reFreshTokenNew } from '../auth.api'
 import { useDispatch } from 'react-redux'
-import { startAppUser } from '../auth.slice'
+import { initialState, startAppUser } from '../auth.slice'
 import { IUser } from '../auth.interface'
 import { useRouter } from 'next/navigation'
+import { CloudFog } from 'lucide-react'
 
 export default function RefreshToken() {
   const dispatch = useDispatch()
@@ -56,31 +57,21 @@ export default function RefreshToken() {
   }
 
   const refreshToken = async () => {
-    const lastRefreshTime = localStorage.getItem('last_refresh_token_time_fl')
-    const currentTime = Date.now()
-
-    // Kiểm tra nếu lần cuối refresh token dưới 10 phút thì không thực hiện nữa
-    if (lastRefreshTime && currentTime - parseInt(lastRefreshTime, 10) < 1000 * 60 * 10) {
-      console.log('Token đã được làm mới gần đây, bỏ qua việc làm mới')
-      return
-    }
-
     // Gọi API refresh token
     const res = await reFreshTokenNew()
+    console.log(res)
     if (res?.code === 0 && res.data) {
       runAppUser(res.data)
-
-      // Lưu thời gian làm mới vào localStorage
-      localStorage.setItem('last_refresh_token_time_fl', currentTime.toString())
-
       const currentPathname = window.location.pathname
-      // Điều hướng dựa trên vai trò người dùng
       if (res.data.us_role.rl_name === 'admin' && !currentPathname.startsWith('/dashboard')) {
         router.push('/dashboard')
       }
       if (res.data.us_role.rl_name !== 'admin' && currentPathname.startsWith('/dashboard')) {
         router.push('/')
       }
+    } else {
+      runAppUser(initialState)
+      router.push('/login')
     }
   }
 

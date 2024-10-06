@@ -25,7 +25,6 @@ export const login = async ({ us_email, us_password }: { us_email: string; us_pa
       us_password
     }
   })
-  console.log(res)
   if (res.statusCode === 201 && res.data) {
     const data = await Promise.all([
       await cookies().set({
@@ -50,8 +49,6 @@ export const login = async ({ us_email, us_password }: { us_email: string; us_pa
     ])
 
     const resProfile: IBackendRes<IUser> = data[2]
-
-    console.log('resProfile:::::::', resProfile)
 
     if (resProfile.statusCode === 200 && resProfile.data) {
       return {
@@ -126,11 +123,31 @@ export const register = async ({ us_email }: { us_email: string }) => {
 
 export const reFreshTokenNew = async () => {
   const refresh_token = cookies().get('refresh_token')?.value
+  const access_token = cookies().get('access_token')?.value
 
-  if (!refresh_token) {
+  if (!refresh_token && !access_token) {
     return {
       code: -1,
-      message: 'Refresh token không tồn tại'
+      message: 'Token không tồn tại'
+    }
+  }
+
+  if (access_token && refresh_token) {
+    const resProfile = await getMe({ access_token, refresh_token })
+
+    if (resProfile.statusCode === 200 && resProfile.data) {
+      return {
+        data: resProfile.data,
+        message: 'Lấy thông tin thành công',
+        code: 0
+      }
+    } else {
+      await deleteCookie()
+
+      return {
+        message: 'Đã có lỗi xảy ra, vui lòng đăng nhập lại',
+        code: -2
+      }
     }
   }
 
@@ -141,6 +158,7 @@ export const reFreshTokenNew = async () => {
       authorization: `Bearer ${refresh_token}`
     }
   })
+
 
   if (res.statusCode === 201 && res.data) {
     const data = await Promise.all([

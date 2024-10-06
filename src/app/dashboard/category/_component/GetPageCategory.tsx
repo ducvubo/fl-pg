@@ -2,16 +2,17 @@
 import React, { useState } from 'react'
 import { Button, Dropdown, Modal, Space, Switch, Table } from 'antd'
 import type { MenuProps, TableColumnsType } from 'antd'
-import { IRestaurant } from '../restaurant.interface'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { deleteRestaurant, updateModify } from '../restaurant.api'
 import { Toast } from '@/app/components/Notification'
 import { useLoading } from '@/app/context/LoadingContext'
 import { deleteCookiesAndRedirect } from '@/app/actions/action'
+import { ICategory } from '../category.interface'
+import Image from 'next/image'
+import { deleteCategory, updateStatusCategory } from '../category.api'
 
 interface Props {
-  data: IRestaurant[]
+  data: ICategory[]
   meta: {
     current: number
     pageSize: number
@@ -20,35 +21,35 @@ interface Props {
   }
 }
 
-export default function GetPageRestaurant({ data, meta }: Props) {
+export default function GetPageCategory({ data, meta }: Props) {
   const { setLoading } = useLoading()
   const router = useRouter()
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedRestaurant, setselectedRestaurant] = useState<IRestaurant | null>(null)
+  const [selectedCategory, setselectedCategory] = useState<ICategory | null>(null)
 
-  const showModal = (restaunrat: IRestaurant) => {
-    setselectedRestaurant(restaunrat)
+  const showModal = (restaunrat: ICategory) => {
+    setselectedCategory(restaunrat)
     setIsModalOpen(true)
   }
 
   const handleOk = async () => {
-    if (selectedRestaurant) {
-      await handleDelete(selectedRestaurant._id)
+    if (selectedCategory) {
+      await handleDelete(selectedCategory._id)
     }
     setIsModalOpen(false)
   }
 
   const handleCancel = () => {
     setIsModalOpen(false)
-    setselectedRestaurant(null)
+    setselectedCategory(null)
   }
 
   const handleDelete = async (id: string) => {
     setLoading(true)
     try {
-      const res: IBackendRes<IRestaurant> = await deleteRestaurant({ id })
+      const res: IBackendRes<ICategory> = await deleteCategory({ id })
       if (res.statusCode === 200) {
-        Toast('Thành công', 'Nhà hàng đã được chuyển vào thùng rác', 'success')
+        Toast('Thành công', 'Danh mục đã được chuyển vào thùng rác', 'success')
         router.refresh()
       } else if (res.code === -10) {
         setLoading(false)
@@ -59,7 +60,7 @@ export default function GetPageRestaurant({ data, meta }: Props) {
         setLoading(false)
         Toast('Thông báo', res.message, 'warning')
       } else if (res.statusCode === 404) {
-        Toast('Thất bại', 'Nhà hàng không tồn tại', 'warning')
+        Toast('Thất bại', 'Danh mục không tồn tại', 'warning')
       } else {
         Toast('Thất bại', 'Đã có lỗi xảy ra, vui lòng thử lại sau', 'error')
       }
@@ -67,22 +68,20 @@ export default function GetPageRestaurant({ data, meta }: Props) {
       Toast('Thất bại', 'Đã có lỗi xảy ra, vui lòng thử lại sau', 'error')
     } finally {
       setLoading(false)
-      setselectedRestaurant(null)
+      setselectedCategory(null)
     }
   }
 
-  const handleUpdateModify = async ({
+  const handleUpdateStatus = async ({
     _id,
-    status,
-    type
+    category_status
   }: {
-    status: 'active' | 'inactive' | 'banned' | boolean
+    category_status: 'enable' | 'disable'
     _id: string
-    type: 'status' | 'verify' | 'state'
   }) => {
     setLoading(true)
     try {
-      const res: IBackendRes<IRestaurant> = await updateModify({ _id, status, type })
+      const res: IBackendRes<ICategory> = await updateStatusCategory({ _id, category_status })
       if (res.statusCode === 200) {
         Toast('Thành công', res.message, 'success')
         router.refresh()
@@ -99,7 +98,6 @@ export default function GetPageRestaurant({ data, meta }: Props) {
       } else if (res.code === -10) {
         setLoading(false)
         Toast('Lỗi', 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại để tiếp tục sử dụng.', 'warning')
-        // router.push('/login')
         await deleteCookiesAndRedirect()
       } else if (res.code === -11) {
         setLoading(false)
@@ -114,96 +112,59 @@ export default function GetPageRestaurant({ data, meta }: Props) {
     }
   }
 
-  const columns: TableColumnsType<IRestaurant> = [
+  const columns: TableColumnsType<ICategory> = [
     {
-      title: 'Email',
+      title: 'Tên danh mục',
       width: 100,
-      dataIndex: 'restaurant_email',
-      key: '0',
-      fixed: 'left'
+      dataIndex: 'category_name',
+      key: '0'
     },
     {
-      title: 'Tên',
+      title: 'Mô tả',
       width: 100,
-      dataIndex: 'restaurant_name',
-      key: '1',
-      fixed: 'left'
+      dataIndex: 'category_description',
+      key: '2'
     },
     {
-      title: 'Danh mục',
-      render: (_, record: IRestaurant) =>
-        typeof record.restaurant_category === 'object' && 'category_name' in record.restaurant_category
-          ? record.restaurant_category.category_name
-          : 'Không có',
-      key: '2',
-      width: 100
-    },
-    {
-      title: 'Số điện thoại',
-      dataIndex: 'restaurant_phone',
+      title: 'Hình ảnh',
+      width: 100,
+      dataIndex: 'category_image',
       key: '3',
-      width: 100
+      render: (_, record) => {
+        return (
+          <div className='group h-28 px-6 py-3 mt-4'>
+            <div className=' bg-white rounded-full w-16 h-16 flex justify-center items-center shadow-custom_categoty custom_categoty transition-all duration-250 ease-in-out'>
+              <Image
+                src={record.category_image.image_cloud}
+                alt='vuducbo'
+                width={50}
+                height={50}
+                className='rounded-full w-10 h-10 object-cover'
+              />
+            </div>
+          </div>
+        )
+      }
     },
+
     {
       title: 'Trạng thái',
       key: '4',
       width: 150,
       render: (_, record) => {
-        const items: MenuProps['items'] = [
-          {
-            key: '1',
-            label: (
-              <span onClick={() => handleUpdateModify({ _id: record._id, status: 'active', type: 'status' })}>
-                Chưa hoạt động
-              </span>
-            )
-          },
-          {
-            key: '2',
-            label: (
-              <span onClick={() => handleUpdateModify({ _id: record._id, status: 'inactive', type: 'status' })}>
-                Đang hoạt động
-              </span>
-            )
-          },
-          {
-            key: '3',
-            label: (
-              <span onClick={() => handleUpdateModify({ _id: record._id, status: 'banned', type: 'status' })}>
-                Cấm hoạt động
-              </span>
-            )
-          }
-        ]
         return (
-          <div className='flex flex-col'>
-            <Button
-              type='primary'
-              danger
-              onClick={() => handleUpdateModify({ _id: record._id, status: !record.restaurant_verify, type: 'verify' })}
-            >
-              {record.restaurant_verify === true ? 'Đã xác minh' : 'Chưa xác minh'}
-            </Button>
-
-            <Button
-              onClick={() => handleUpdateModify({ _id: record._id, status: !record.restaurant_state, type: 'state' })}
-            >
-              {record.restaurant_state === true ? 'Đang mở cửa' : 'Đang đóng'}
-            </Button>
-            <Space direction='vertical'>
-              <Space wrap>
-                <Dropdown menu={{ items }} placement='bottomLeft'>
-                  <Button type='dashed' danger>
-                    {record.restaurant_status === 'active'
-                      ? 'Chưa hoạt động'
-                      : record.restaurant_status === 'inactive'
-                      ? 'Đang hoạt động'
-                      : 'Cấm hoạt động'}
-                  </Button>
-                </Dropdown>
-              </Space>
-            </Space>
-          </div>
+          <Button
+            type={record.category_status === 'enable' ? 'primary' : 'default'}
+            danger={record.category_status === 'disable'}
+            onClick={() =>
+              handleUpdateStatus({
+                _id: record._id,
+                category_status: record.category_status === 'enable' ? 'disable' : 'enable'
+              })
+            }
+          >
+            {record.category_status === 'enable' ? 'Đang hoạt động' : 'Ngưng hoạt động'}
+          </Button>
         )
       }
     },
@@ -217,11 +178,12 @@ export default function GetPageRestaurant({ data, meta }: Props) {
         const items: MenuProps['items'] = [
           {
             key: '1',
-            label: <Link href={`/dashboard/restaurant/${record._id}`}>Sửa</Link>
+            label: <Link href={`/dashboard/category/${record._id}`}>Sửa</Link>
           },
           {
             key: '2',
             label: <span onClick={() => showModal(record)}>Xóa</span>
+            // label: <span>Xóa</span>
           }
         ]
 
@@ -247,7 +209,7 @@ export default function GetPageRestaurant({ data, meta }: Props) {
     showSizeChanger: true,
     pageSizeOptions: ['5', '10', '20', '50'],
     onChange: (page: number, pageSize: number) => {
-      router.push(`/dashboard/restaurant?page=${page}&size=${pageSize}`)
+      router.push(`/dashboard/category?page=${page}&size=${pageSize}`)
     }
   }
 
@@ -256,7 +218,7 @@ export default function GetPageRestaurant({ data, meta }: Props) {
       <Table
         columns={columns}
         dataSource={dataWithKeys}
-        scroll={{ x: 1500, y: 590 }}
+        scroll={{ x: 1200, y: 590 }}
         pagination={paginationConfig}
         className='h-[690px]'
       />
@@ -268,7 +230,7 @@ export default function GetPageRestaurant({ data, meta }: Props) {
         okText='Xác nhận'
         cancelText='Hủy'
       >
-        <p>Bạn có chắc chắn muốn chuyển nhà hàng '{selectedRestaurant?.restaurant_name}' vào thùng rác không?</p>
+        <p>Bạn có chắc chắn muốn chuyển danh mục '{selectedCategory?.category_name}'' vào thùng rác không?</p>
       </Modal>
     </>
   )

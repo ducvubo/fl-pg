@@ -1,5 +1,5 @@
 'use client'
-import React, { lazy, useEffect, useState } from 'react'
+import React, { lazy, useActionState, useEffect, useRef, useState } from 'react'
 import type { FormProps, GetProp, UploadFile, UploadProps } from 'antd'
 import { Button, Checkbox, Form, Input, InputNumber, Select, Upload, Image, Cascader, Space } from 'antd'
 import { ICategory } from '../../category/category.interface'
@@ -56,11 +56,8 @@ export default function AddOrEdit({ id, inforRestaurant }: Props) {
   const [amenity, setAmenity] = useState<{ name: string; _id: string }[]>([])
   const [restaurantPrice, setrestaurantPrice] = useState<'range' | 'up' | 'down'>('range')
   const [selectedDays, setSelectedDays] = useState<string[]>([]) // State to track selected days
-  const [propose, setPropose] = useState(defaultPropose)
-  const [overview, setOverview] = useState(defaultOverview)
-  const [regulation, setRegulation] = useState(defaultRegulation)
-  const [parkingArea, setParkingArea] = useState(defaultParkingArea)
-  const [description, setDescription] = useState('')
+  const editorRefOverview = useRef<any>(defaultOverview)
+  const editorRefDescription = useRef<any>('')
 
   useEffect(() => {
     const getListCategory = async () => {
@@ -196,7 +193,7 @@ export default function AddOrEdit({ id, inforRestaurant }: Props) {
   }, [imageBanner[0]?.response])
 
   const onFinish: FormProps<IRestaurant>['onFinish'] = async (values) => {
-    // setLoading(true)
+    setLoading(true)
     const restaurant_address: any = CustomAddress(dataAdress, values)
 
     const restaurant_amenity = amenity.map((item: any) => item._id)
@@ -210,11 +207,8 @@ export default function AddOrEdit({ id, inforRestaurant }: Props) {
     const payload: IRestaurant = {
       ...values,
       restaurant_address,
-      restaurant_overview: overview,
-      restaurant_regulation: regulation,
-      restaurant_parking_area: parkingArea,
-      restaurant_description: description,
-      restaurant_propose: propose,
+      restaurant_overview: editorRefOverview.current.getContent(),
+      restaurant_description: editorRefDescription.current.getContent(),
       restaurant_amenity,
       restaurant_type
     }
@@ -315,11 +309,6 @@ export default function AddOrEdit({ id, inforRestaurant }: Props) {
           _id: item._id
         }))
       )
-      setPropose(inforRestaurant.restaurant_propose)
-      setOverview(inforRestaurant.restaurant_overview)
-      setRegulation(inforRestaurant.restaurant_regulation)
-      setParkingArea(inforRestaurant.restaurant_parking_area)
-      setDescription(inforRestaurant.restaurant_description)
       setImageRestaurant(
         inforRestaurant.restaurant_image.map((item: any) => ({
           uid: String(Math.floor(Math.random() * (1000000000 - 1 + 1)) + 1),
@@ -346,6 +335,9 @@ export default function AddOrEdit({ id, inforRestaurant }: Props) {
         }
       ])
       setSelectedDays(inforRestaurant.restaurant_hours.map((item) => item.day_of_week))
+
+      editorRefOverview.current = inforRestaurant.restaurant_overview
+      editorRefDescription.current = inforRestaurant.restaurant_description
     }
   }, [id, inforRestaurant])
 
@@ -382,7 +374,6 @@ export default function AddOrEdit({ id, inforRestaurant }: Props) {
       onFinishFailed={onFinishFailed}
       autoComplete='off'
     >
-      {/* <Button onClick={test}>abc</Button> */}
       <Form.Item<IRestaurant>
         label='Ảnh nhà hàng'
         getValueFromEvent={normFile}
@@ -699,44 +690,23 @@ export default function AddOrEdit({ id, inforRestaurant }: Props) {
         </div>
       </div>
 
-      <div className='flex ml-[208px] mb-10'>
-        <label className='mr-2 whitespace-nowrap'>Đề xuất: </label>
-        <div>
-          <EditorTiny data={propose} setData={setPropose} defaultData={propose} width='900px' />
-        </div>
-      </div>
-
       <div className='flex ml-[209px] mb-10'>
         <label className='mr-2 whitespace-nowrap'>Tóm tắt: </label>
         <div>
-          <EditorTiny data={overview} setData={setOverview} defaultData={overview} width='900px' />
-        </div>
-      </div>
-
-      <div className='flex ml-[200px] mb-10'>
-        <label className='mr-2 whitespace-nowrap'>Quy định: </label>
-        <div>
-          <EditorTiny data={regulation} setData={setRegulation} defaultData={regulation} width='900px' />
-        </div>
-      </div>
-
-      <div className='flex ml-[195px] mb-10'>
-        <label className='mr-2 whitespace-nowrap'>Chỗ để xe: </label>
-        <div>
-          <EditorTiny data={parkingArea} setData={setParkingArea} defaultData={parkingArea} width='900px' />
+          <EditorTiny editorRef={editorRefOverview} width='900px' />
         </div>
       </div>
 
       <div className='flex ml-[160px] mb-10'>
         <label className='mr-2 whitespace-nowrap'>Mô tả nhà hàng: </label>
         <div>
-          <EditorTiny data={description} setData={setDescription} defaultData={description} width='900px' />
+          <EditorTiny width='900px' editorRef={editorRefDescription} />
         </div>
       </div>
 
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type='primary' htmlType='submit'>
-          Submit
+          {id === 'add' ? 'Thêm' : 'Cập nhật'}
         </Button>
       </Form.Item>
     </Form>

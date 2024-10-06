@@ -299,7 +299,7 @@ export default function AddOrEdit({ id, inforUser }: Props) {
 
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type='primary' htmlType='submit'>
-          Submit
+          {id === 'add' ? 'Thêm' : 'Cập nhật'}
         </Button>
       </Form.Item>
     </Form>

@@ -81,6 +81,9 @@ const config = {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out'
+      },
+      boxShadow: {
+        custom_categoty: '0 0 10px rgba(0, 0, 0, 0.5)' // Tên lớp là 'shadow-custom'
       }
     }
   },

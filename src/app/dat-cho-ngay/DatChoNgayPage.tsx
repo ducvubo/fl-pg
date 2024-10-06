@@ -25,7 +25,6 @@ import locale from 'antd/es/date-picker/locale/vi_VN'
 import { RootState } from '../redux/store'
 import { useSelector } from 'react-redux'
 
-// Cài đặt localeData plugin để lấy thông tin thứ
 dayjs.extend(localeData)
 dayjs.locale('vi')
 

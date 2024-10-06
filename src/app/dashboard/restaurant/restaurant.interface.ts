@@ -69,10 +69,7 @@ export interface IRestaurant {
   restaurant_type: string[]
   restaurant_price: IRestaurantPrice
   restaurant_hours: IRestaurantHours[]
-  restaurant_propose: string
   restaurant_overview: string
-  restaurant_regulation: string
-  restaurant_parking_area: string
   restaurant_amenity: string[]
   restaurant_image: IUpLoadImage[]
   restaurant_description: string

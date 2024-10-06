@@ -6,7 +6,7 @@ const Footer = () => {
       <div className='container mx-auto grid grid-cols-1 md:grid-cols-4 gap-6'>
         {/* PasGo Introduction */}
         <div>
-          <h2 className='text-red-500 font-bold text-xl mb-4'>PasGo</h2>
+          <h2 className='text-[#d02028] font-bold text-xl mb-4'>PasGo</h2>
           <p>
             PasGo là Mạng lưới nhà hàng NGON, uy tín và chất lượng. Giúp thực khách đặt bàn dễ dàng, được tặng kèm ưu
             đãi mà không cần mua Deal, Voucher. Giải pháp đột phá mới cho câu chuyện ăn gì, ở đâu!
@@ -41,13 +41,13 @@ const Footer = () => {
         <div className='flex flex-col items-start'>
           <h2 className='font-semibold text-lg mb-4'>Tham gia với chúng tôi</h2>
           <div className='flex space-x-4 mb-4'>
-            <a href='#' className='text-red-500'>
+            <a href='#' className='text-[#d02028]'>
               <i className='fab fa-facebook fa-2x'></i>
             </a>
-            <a href='#' className='text-red-500'>
+            <a href='#' className='text-[#d02028]'>
               <i className='fab fa-youtube fa-2x'></i>
             </a>
-            <a href='#' className='text-red-500'>
+            <a href='#' className='text-[#d02028]'>
               <i className='fab fa-tiktok fa-2x'></i>
             </a>
           </div>

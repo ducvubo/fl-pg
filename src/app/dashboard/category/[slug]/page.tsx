@@ -1,14 +1,14 @@
 import React, { Suspense } from 'react'
 import LoadingServer from '@/components/LoadingServer'
 import AddOrEdit from '../_component/AddOrEdit'
-import { getAllRestaurantRecycle, getRestaurantById } from '../restaurant.api'
-import { IRestaurant } from '../restaurant.interface'
-import GetPageRestaurantRecycle from '../_component/GetPageRecycle'
 import { redirect } from 'next/navigation'
 import ToastServer from '@/app/components/ToastServer'
 import { deleteCookiesAndRedirect } from '@/app/actions/action'
 import dynamic from 'next/dynamic'
 import LogoutPage from '@/app/(auth)/logout/page'
+import { ICategory } from '../category.interface'
+import { getCategoryById, getCategoryRecycle } from '../category.api'
+import GetPageCategorytRecycle from '../_component/GetPageRecycle'
 const ToastSeverRedirect = dynamic(() => import('@/app/components/ToastServerRedirect'), {
   ssr: false
 })
@@ -24,7 +24,7 @@ async function Component({ searchParams, params }: PageProps) {
   }
 
   if (id === 'recycle') {
-    const res: IBackendRes<IModelPaginate<IRestaurant>> = await getAllRestaurantRecycle({
+    const res: IBackendRes<IModelPaginate<ICategory>> = await getCategoryRecycle({
       current: searchParams.page ? searchParams.page : '1',
       pageSize: searchParams.size ? searchParams.size : '10'
     })
@@ -43,13 +43,13 @@ async function Component({ searchParams, params }: PageProps) {
     }
 
     // const data = res.data.result.flat()
-    return <GetPageRestaurantRecycle data={res.data.result} meta={res.data.meta} />
+    return <GetPageCategorytRecycle data={res.data.result} meta={res.data.meta} />
   }
 
-  const res: IBackendRes<IRestaurant> = await getRestaurantById({ id })
+  const res: IBackendRes<ICategory> = await getCategoryById({ id })
 
   if (res.statusCode === 404) {
-    return <ToastSeverRedirect message='Nhà hàng không tồn tại' route='/dashboard/restaurant' />
+    return <ToastSeverRedirect message='Danh mục không tồn tại' route='/dashboard/category' />
   }
 
   if (res.code === -10) {
@@ -66,7 +66,7 @@ async function Component({ searchParams, params }: PageProps) {
       </>
     )
   }
-  return <AddOrEdit id={id} inforRestaurant={res.data} />
+  return <AddOrEdit id={id} inforCategory={res.data} />
 }
 
 export default function Page(props: PageProps) {

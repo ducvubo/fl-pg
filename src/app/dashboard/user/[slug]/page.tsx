@@ -7,6 +7,7 @@ import { IUserModel } from '../user.interface'
 import ToastServer from '@/app/components/ToastServer'
 import { getAllUser, getUserById } from '../user.api'
 import dynamic from 'next/dynamic'
+import LogoutPage from '@/app/(auth)/logout/page'
 const ToastSeverRedirect = dynamic(() => import('@/app/components/ToastServerRedirect'), {
   ssr: false
 })
@@ -22,7 +23,7 @@ async function Component({ searchParams, params }: PageProps) {
   }
 
   if (id === 'recycle') {
-    const res: IBackendRes<IModelPaginate<IUserModel[]>> = await getAllUser(
+    const res: IBackendRes<IModelPaginate<IUserModel>> = await getAllUser(
       {
         current: searchParams.page ? searchParams.page : '1',
         pageSize: searchParams.size ? searchParams.size : '10'
@@ -30,7 +31,7 @@ async function Component({ searchParams, params }: PageProps) {
       'recycle'
     )
     if (res.code === -10) {
-      deleteCookiesAndRedirect()
+      return <LogoutPage />
     }
     if (res.code === -11) {
       return <ToastServer message='Bạn không có quyền truy cập' />
@@ -43,8 +44,8 @@ async function Component({ searchParams, params }: PageProps) {
       )
     }
 
-    const data = res.data.result.flat()
-    return <GetPageUserRecycle data={data} meta={res.data.meta} />
+    // const data = res.data.result.flat()
+    return <GetPageUserRecycle data={res.data.result} meta={res.data.meta} />
   }
 
   const res: IBackendRes<IUserModel> = await getUserById({ id })
@@ -54,7 +55,7 @@ async function Component({ searchParams, params }: PageProps) {
   }
 
   if (res.code === -10) {
-    deleteCookiesAndRedirect()
+    return <LogoutPage />
   }
   if (res.code === -11) {
     return <ToastServer message='Bạn không có quyền truy cập' />

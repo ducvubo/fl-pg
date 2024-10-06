@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Nunito } from 'next/font/google'
 import './globals.css'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
 import dynamic from 'next/dynamic'
@@ -9,7 +9,7 @@ import { StoreProvider } from './redux/StoreProvider'
 
 const GlobalLoading = dynamic(() => import('@/components/GlobalLoading'), { ssr: false })
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Nunito({ subsets: ['vietnamese'], weight: ['400', '500', '700', '900'] })
 
 export const metadata: Metadata = {
   title: 'Create Next App',

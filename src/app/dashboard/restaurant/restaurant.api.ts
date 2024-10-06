@@ -74,7 +74,7 @@ export const createRestaurant = async (payload: IRestaurant) => {
 }
 
 export const getAllRestaurant = async ({ current, pageSize }: { current: string; pageSize: string }) => {
-  const res: IBackendRes<IModelPaginate<IRestaurant[]>> = await sendRequest({
+  const res: IBackendRes<IModelPaginate<IRestaurant>> = await sendRequest({
     url: `${process.env.URL_SERVER}/restaurants`,
     method: 'GET',
     queryParams: {
@@ -85,12 +85,6 @@ export const getAllRestaurant = async ({ current, pageSize }: { current: string;
       cache: 'no-store'
     }
   })
-  // if (res.statusCode === 401 && res.code === -10) {
-  //   return {
-  //     code: -10,
-  //     message: 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại để tiếp tục sử dụng.'
-  //   }
-  // }
   return res
 }
 
@@ -161,7 +155,7 @@ export const updateModify = async ({
 }
 
 export const getAllRestaurantRecycle = async ({ current, pageSize }: { current: string; pageSize: string }) => {
-  const res: IBackendRes<IModelPaginate<IRestaurant[]>> = await sendRequest({
+  const res: IBackendRes<IModelPaginate<IRestaurant>> = await sendRequest({
     url: `${process.env.URL_SERVER}/restaurants/recycle`,
     method: 'GET',
     queryParams: {

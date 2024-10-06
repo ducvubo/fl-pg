@@ -9,7 +9,6 @@ export const sendRequest = async <T>(props: IRequest) => {
   const access_token = cookie.get('access_token')?.value
   const refresh_token = cookie.get('refresh_token')?.value
   const id_user_guest = cookie.get('id_user_guest')?.value
-  console.log('id_user_guest', id_user_guest)
   if (access_token && refresh_token) {
     options = {
       method: method,
@@ -61,9 +60,9 @@ export const sendRequest = async <T>(props: IRequest) => {
     } else {
       return res.json().then(async function (json: any) {
         if (res.status === 401 && json?.code === -10) {
-          await fetch(`${process.env.NEXT_PUBLIC_URL_CLIENT}/api/cookie`, {
-            method: 'POST'
-          })
+          // await fetch(`${process.env.NEXT_PUBLIC_URL_CLIENT}/api/cookie`, {
+          //   method: 'POST'
+          // })
           return {
             statusCode: res.status,
             message: 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại để tiếp tục sử dụng.',

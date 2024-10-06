@@ -68,38 +68,10 @@
   }
 }
 
-.ck-heading_heading1 {
-  font-size: 2em; /* tương đương h1 */
-  font-weight: bold;
-  margin: 0.67em 0;
+:where(.css-dev-only-do-not-override-ccdg5a).ant-layout-sider .ant-layout-sider-trigger {
+  background-color: white !important;
 }
 
-.ck-heading_heading2 {
-  font-size: 1.5em; /* tương đương h2 */
-  font-weight: bold;
-  margin: 0.75em 0;
-}
-
-.ck-heading_heading3 {
-  font-size: 1.17em; /* tương đương h3 */
-  font-weight: bold;
-  margin: 0.83em 0;
-}
-
-.ck-heading_heading4 {
-  font-size: 1em; /* tương đương h4 */
-  font-weight: bold;
-  margin: 1.12em 0;
-}
-
-.ck-heading_heading5 {
-  font-size: 0.83em; /* tương đương h5 */
-  font-weight: bold;
-  margin: 1.5em 0;
-}
-
-.ck-heading_heading6 {
-  font-size: 0.75em; /* tương đương h6 */
-  font-weight: bold;
-  margin: 1.67em 0;
+:where(.css-dev-only-do-not-override-ccdg5a).ant-layout-sider .ant-layout-sider-trigger .anticon svg {
+  color: black;
 }

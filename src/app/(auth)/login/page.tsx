@@ -4,6 +4,5 @@ interface RestaurantPageProps {
   searchParams: { [key: string]: string }
 }
 export default function LoginPage({ searchParams }: RestaurantPageProps) {
-  const error = searchParams.error
   return <LoginForm />
 }

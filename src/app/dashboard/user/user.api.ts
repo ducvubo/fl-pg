@@ -25,7 +25,7 @@ export const createUser = async (data: IUserModel) => {
 
 export const getAllUser = async ({ current, pageSize }: { current: string; pageSize: string }, type: string) => {
   const url = type === 'all' ? `${process.env.URL_SERVER}/users` : `${process.env.URL_SERVER}/users/recycle`
-  const res: IBackendRes<IModelPaginate<IUserModel[]>> = await sendRequest({
+  const res: IBackendRes<IModelPaginate<IUserModel>> = await sendRequest({
     url: url,
     method: 'GET',
     queryParams: {

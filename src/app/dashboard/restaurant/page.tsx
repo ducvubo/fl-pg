@@ -6,19 +6,20 @@ import LoadingServer from '@/components/LoadingServer'
 import { redirect } from 'next/navigation'
 import ToastServer from '@/app/components/ToastServer'
 import { deleteCookiesAndRedirect } from '@/app/actions/action'
+import LogoutPage from '@/app/(auth)/logout/page'
 
 interface RestaurantPageProps {
   searchParams: { [key: string]: string }
 }
 
 async function Component({ searchParams }: RestaurantPageProps) {
-  const res: IBackendRes<IModelPaginate<IRestaurant[]>> = await getAllRestaurant({
+  const res: IBackendRes<IModelPaginate<IRestaurant>> = await getAllRestaurant({
     current: searchParams.page ? searchParams.page : '1',
     pageSize: searchParams.size ? searchParams.size : '10'
   })
 
   if (res.code === -10) {
-    deleteCookiesAndRedirect()
+    return <LogoutPage />
   }
   if (res.code === -11) {
     return <ToastServer message='Bạn không có quyền truy cập' />
@@ -30,11 +31,11 @@ async function Component({ searchParams }: RestaurantPageProps) {
       </>
     )
   }
-  const data = res.data.result.flat()
+  // const data = res.data.result.flat()
 
   return (
     <div>
-      <GetPageRestaurant data={data} meta={res.data.meta} />
+      <GetPageRestaurant data={res.data.result} meta={res.data.meta} />
     </div>
   )
 }

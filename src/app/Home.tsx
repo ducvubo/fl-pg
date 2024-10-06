@@ -3,16 +3,17 @@ import React from 'react'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import CarouselRestaurant from './components/Carousel'
+import CarouselCategory from './components/CarouselCategory'
+import OfferHot from './components/OfferHot'
 
 export default function HomePage() {
   return (
     <>
       <Header />
-      <CarouselRestaurant />
-      {/* // <div className='flex flex-col'>
-    //   <Link href='/login'>Login</Link>
-    //   <Link href='/register'>Register</Link>
-    // </div> */}
+      <div className='px-[196px] flex flex-col'>
+        <CarouselCategory />
+        <OfferHot />
+      </div>
       <Footer />
     </>
   )

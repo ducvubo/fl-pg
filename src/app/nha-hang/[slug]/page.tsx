@@ -117,14 +117,14 @@ export default function ThongTinNhaHang({ params }: { params: { slug: string } }
                 <TbFlag3 fontSize={'1.4em'} className=' mt-[3px]' />
                 <span className='font-semibold text-base'>Loại hình:</span>
                 {restaurant?.restaurant_type?.slice(0, 3).map((item: any, index: number) => (
-                  <span key={index} className='font-semibold text-base text-red-500'>
+                  <span key={index} className='font-semibold text-base text-[#d02028]'>
                     {item.restaurant_type_name}
                     {index !== Math.min(restaurant?.restaurant_type?.length || 0, 3) - 1 && ', '}
                   </span>
                 ))}
 
                 {(restaurant?.restaurant_type?.length || 0) > 3 && (
-                  <span className='font-semibold text-base text-red-500'>...</span>
+                  <span className='font-semibold text-base text-[#d02028]'>...</span>
                 )}
               </div>
               <div className='flex gap-2'>
@@ -148,7 +148,7 @@ export default function ThongTinNhaHang({ params }: { params: { slug: string } }
               </div>
               <div className='flex gap-2'>
                 <FaRegClock fontSize={'1.3em'} className=' mt-[3px]' />
-                <span className='font-semibold text-base text-red-500'>Đang mở cửa: 10:30 - 14:00</span>
+                <span className='font-semibold text-base text-[#d02028]'>Đang mở cửa: 10:30 - 14:00</span>
               </div>
             </div>
           </Row>

@@ -7,11 +7,6 @@ export interface IRestaurantBySlug
   extends Omit<IRestaurant, 'restaurant_password' | 'restaurant_status' | 'restaurant_state'> {}
 
 export const getRestaurantBySlug = async (slug: string) => {
-  const cookieStore = cookies()
-  const access_token = cookieStore.get('id_user_guest')?.value
-
-  console.log('Access Token:', access_token)
-
   const res: IBackendRes<IRestaurantBySlug> = await sendRequest({
     url: `${process.env.URL_SERVER}/restaurants/slug/${slug}`,
     method: 'GET',
@@ -19,6 +14,7 @@ export const getRestaurantBySlug = async (slug: string) => {
       cache: 'no-store'
     }
   })
+
   return res
 }
 

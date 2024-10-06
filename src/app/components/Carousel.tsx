@@ -18,14 +18,14 @@ const contentStyle: React.CSSProperties = {
   background: '#364d79'
 }
 
- const NextArrow = (props: any) => {
+const NextArrow = (props: any) => {
   const { className, style, onClick } = props
   return (
     <div className={className} style={{ ...style, display: 'block', right: '10px', zIndex: 1 }} onClick={onClick} />
   )
 }
 
- const PrevArrow = (props: any) => {
+const PrevArrow = (props: any) => {
   const { className, style, onClick } = props
   return <div className={className} style={{ ...style, display: 'block', left: '10px', zIndex: 1 }} onClick={onClick} />
 }
@@ -36,6 +36,7 @@ export default function CarouselRestaurant() {
   const listRestaurants = async () => {
     try {
       const res: IBackendRes<IRestaurantHome[]> = await getRestaurant()
+      console.log(res)
       if (res.statusCode === 200 && res.data) {
         setListRestaurant(res.data)
       } else {
@@ -77,10 +78,10 @@ export default function CarouselRestaurant() {
                 className='object-cover w-full h-[300px] rounded-xl'
               />
               <div className='flex flex-col'>
-                <span className='font-bold text-lg line-clamp-2 hover:text-red-500 cursor-pointer'>
+                <span className='font-bold text-lg line-clamp-2 hover:text-[#d02028] cursor-pointer'>
                   {item.restaurant_name}
                 </span>
-                <span className='font-semibold text-red-500 text-sm'>
+                <span className='font-semibold text-[#d02028] text-sm'>
                   {item.restaurant_price.restaurant_price_option === 'range'
                     ? `Từ ${item.restaurant_price.restaurant_price_min?.toLocaleString()} - ${item.restaurant_price.restaurant_price_max?.toLocaleString()} VNĐ`
                     : item.restaurant_price.restaurant_price_option === 'down'
